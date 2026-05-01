@@ -6,7 +6,7 @@ import com.annotation.EnableCustomConfig;
 import com.annotation.EnableRyFeignClients;
 
 /**
- * 系统模块springcloud-alibaba3krib874
+ * 系统模块springcloud-module-system
  *
  * @author abo
  */

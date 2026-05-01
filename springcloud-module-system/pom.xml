@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>springcloud-alibaba3krib874</artifactId>
+    <artifactId>springcloud-alibaba</artifactId>
 
     <description>系统模块</description>
 
