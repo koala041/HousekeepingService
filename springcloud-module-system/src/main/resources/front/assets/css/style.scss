@@ -1,0 +1,29 @@
+uni-input{
+	height: 100upx;
+}
+
+page {
+	background: linear-gradient(180deg, #fff1f5 0%, #ffe6ee 48%, #fff9f6 100%);
+	color: #4f3b44;
+}
+
+.content {
+	background: linear-gradient(180deg, #fff1f5 0%, #ffe6ee 48%, #fff9f6 100%);
+}
+
+.cu-btn,
+button {
+	border-radius: 999rpx;
+}
+
+.bg-green,
+.bg-cyan {
+	background: #ff6f9f !important;
+	color: #fff !important;
+}
+
+.text-green,
+.cuIcon-service,
+.me-menu-icon {
+	color: #ff6f9f !important;
+}

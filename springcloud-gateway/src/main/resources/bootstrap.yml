@@ -1,0 +1,53 @@
+# Tomcat
+server:
+  port: 8080
+
+# Spring
+spring:
+  application:
+    name: springcloud-gateway
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    gateway:
+      routes:
+        - id: springcloud-alibaba3krib874
+          uri: lb://springcloud-alibaba3krib874
+          predicates:
+            - Path=/springcloud-alibaba3krib874/**
+          filters:
+            - StripPrefix=1
+
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:8718
+      datasource:
+        ds1:
+          nacos:
+            server-addr: 127.0.0.1:8848
+            dataId: sentinel-gateway
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+
+# 网关白名单（放行图片、登录、验证码）
+ignore:
+  whites:
+    - /upload/**
+    - /file/**
+    - /auth/**
+    - /code/**
+
+token:
+  secret:
