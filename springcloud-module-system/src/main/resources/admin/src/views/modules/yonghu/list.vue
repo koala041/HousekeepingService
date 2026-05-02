@@ -1,5 +1,4 @@
-  
-<template>
+  <template>
 	<div class="main-content" :style='{"width":"100%","padding":"20px","fontSize":"14px","color":"#666","height":"auto"}'>
 		<!-- 列表页 -->
 		<template v-if="showFlag ">
@@ -60,7 +59,7 @@
 							<div v-if="scope.row.touxiang">
 								<img v-if="scope.row.touxiang.substring(0,4)=='http'&&scope.row.touxiang.split(',w').length>1" :src="scope.row.touxiang" width="100" height="100" style="object-fit: cover" @click="imgPreView(scope.row.touxiang)">
 								<img v-else-if="scope.row.touxiang.substring(0,4)=='http'" :src="scope.row.touxiang.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView(scope.row.touxiang.split(',')[0])">
-								<img v-else :src="$base.url+scope.row.touxiang.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView($base.url+scope.row.touxiang.split(',')[0])">
+								<img v-else :src="$fileUrl(scope.row.touxiang.split(',')[0])" width="100" height="100" style="object-fit: cover" @click="imgPreView($fileUrl(scope.row.touxiang.split(',')[0]))">
 							</div>
 							<div v-else>无图片</div>
 						</template>

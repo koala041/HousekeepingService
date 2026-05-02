@@ -53,12 +53,9 @@ public class YonghuController {
     private YonghuService yonghuService;
     @Autowired
     private RedisUtils redisUtils;
+
     @Autowired
     private SmsregistercodeService smsregistercodeService;
-
-
-
-
     
 	@Autowired
 	private TokenService tokenService;

@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,11 +33,57 @@ import java.util.Random;
 @RestController
 @RequestMapping("file")
 public class FileController {
+
 	@Autowired
 	private ConfigService configService;
 
 	/**
-	 * 上传文件
+	 * 定位当前 springcloud-module-system 模块的根目录
+	 */
+	private File findModuleRoot() throws IOException {
+		try {
+			// 获取当前类的编译输出目录（target/classes）
+			File currentFile = new File(FileController.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			while (currentFile != null) {
+				// 向上查找，直到找到 springcloud-module-system 模块的根目录
+				if (new File(currentFile, "pom.xml").exists()
+						&& new File(currentFile, "src/main").exists()) {
+					return currentFile;
+				}
+				currentFile = currentFile.getParentFile();
+			}
+			throw new IOException("无法找到 springcloud-module-system 模块根目录");
+		} catch (java.net.URISyntaxException e) {
+			throw new IOException("获取项目路径失败", e);
+		}
+	}
+
+	/**
+	 * 获取上传目录：springcloud-module-system/upload
+	 */
+	private File getUploadDir() throws IOException {
+		File moduleRoot = findModuleRoot();
+		// 直接定位到模块根目录下的 upload 文件夹
+		File uploadDir = new File(moduleRoot, "upload").getCanonicalFile();
+		if (!uploadDir.exists() && !uploadDir.mkdirs()) {
+			throw new IOException("上传目录创建失败：" + uploadDir.getAbsolutePath());
+		}
+		return uploadDir;
+	}
+
+	/**
+	 * 安全解析文件路径，防止路径穿越攻击
+	 */
+	private File resolveUploadFile(String fileName) throws IOException {
+		Path normalizedFileName = Paths.get(fileName).normalize();
+		if (normalizedFileName.getParent() != null) {
+			throw new SecurityException("非法文件路径");
+		}
+		return new File(getUploadDir(), normalizedFileName.toString()).getCanonicalFile();
+	}
+
+	/**
+	 * 上传文件（仅保存到 upload 目录）
 	 */
 	@RequestMapping("/upload")
 	@IgnoreAuth
@@ -51,46 +96,32 @@ public class FileController {
 
 			// 获取原始文件名并解码处理（解决中文乱码）
 			String originalFilename = file.getOriginalFilename();
+			System.out.println("上传的图片文件：" + originalFilename);
 			if (originalFilename == null || !originalFilename.contains(".")) {
 				throw new EIException("文件名不合法");
 			}
 			originalFilename = URLDecoder.decode(originalFilename, "UTF-8");
 			String fileExt = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
 
-			// 构建上传目录路径
-			File path = new File(URLDecoder.decode(ResourceUtils.getURL("classpath:static").getPath(), StandardCharsets.UTF_8.name()));
-			if (!path.exists()) {
-				path = new File("");
-			}
-			File uploadDir = new File(path, "upload");
-			if (!uploadDir.exists() && !uploadDir.mkdirs()) {
-				throw new EIException("上传目录创建失败");
-			}
+			File uploadDir = getUploadDir();
 
 			// 生成唯一文件名（时间戳+随机数），避免并发冲突
+			System.out.println("fileExt：" + fileExt);
 			String fileName;
 			if (StringUtils.isNotBlank(type) && type.contains("_template")) {
 				fileName = type + "." + fileExt;
 				File oldFile = new File(uploadDir, fileName);
 				if (oldFile.exists()) {
-					oldFile.delete(); // 删除旧模板文件
+					oldFile.delete();
 				}
 			} else {
 				fileName = System.currentTimeMillis() + "_" + new Random().nextInt(1000) + "." + fileExt;
 			}
-
+			System.out.println("fileName: " + fileName);
 			File dest = new File(uploadDir, fileName);
 
 			// 保存文件到目标位置
 			file.transferTo(dest);
-
-			/**
-            * 如果使用idea或者eclipse重启项目，发现之前上传的图片或者文件丢失，将下面一行代码注释打开
-            * 请将以下的"D:\\springcloud-alibaba\\springcloud-module-system\\src\\main\\resources\\static\\upload"替换成你本地项目的upload路径，
-            * 并且项目路径不能存在中文、空格等特殊字符
-            */
-			//		FileUtils.copyFile(dest, new File("D:\\springcloud-alibaba\\springcloud-module-system\\src\\main\\resources\\static\\upload"+"/"+fileName)); /**修改了路径以后请将该行最前面的//注释去掉**/
-
 
 			// 特殊业务逻辑：更新配置
 			if (StringUtils.isNotBlank(type) && type.equals("1")) {
@@ -130,17 +161,7 @@ public class FileController {
 				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 			}
 
-			File resourceDir = new File(ResourceUtils.getURL("classpath:static").getPath());
-			if (!resourceDir.exists()) {
-				resourceDir = new File("");
-			}
-
-			File uploadDir = new File(resourceDir, "upload");
-			if (!uploadDir.exists() && !uploadDir.mkdirs()) {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-
-			File file = new File(uploadDir, fileName);
+			File file = resolveUploadFile(fileName);
 			if (!file.exists()) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
@@ -150,7 +171,9 @@ public class FileController {
 			headers.setContentDispositionFormData("attachment", fileName);
 
 			byte[] fileBytes = FileUtils.readFileToByteArray(file);
-			return new ResponseEntity<>(fileBytes, headers, HttpStatus.CREATED);
+			return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+		} catch (SecurityException e) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		} catch (IOException e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -162,10 +185,8 @@ public class FileController {
 	@RequestMapping("/encrypt")
 	@IgnoreAuth
 	public R encrypt(@RequestParam String fileName, @RequestParam String type) throws IOException {
-		File path = new File(ResourceUtils.getURL("classpath:static").getPath());
-		File uploadDir = new File(path, "upload");
-
-		File originalFile = new File(uploadDir, fileName);
+		File uploadDir = getUploadDir();
+		File originalFile = resolveUploadFile(fileName);
 
 		// 路径校验
 		if (!originalFile.exists() || !originalFile.getParentFile().equals(uploadDir)) {
@@ -228,17 +249,8 @@ public class FileController {
 		}
 
 		try {
-			File resourceDir = new File(ResourceUtils.getURL("classpath:static").getPath());
-			if (!resourceDir.exists()) {
-				resourceDir = new File("");
-			}
-
-			File uploadDir = new File(resourceDir, "upload");
-			if (!uploadDir.exists()) {
-				return R.error("上传目录不存在");
-			}
-
-			File encryptedFile = new File(uploadDir, fileName);
+			File uploadDir = getUploadDir();
+			File encryptedFile = resolveUploadFile(fileName);
 			if (!encryptedFile.exists()) {
 				return R.error("文件不存在");
 			}
@@ -283,6 +295,5 @@ public class FileController {
 			return R.error("文件解密失败：" + e.getMessage());
 		}
 	}
-
 
 }

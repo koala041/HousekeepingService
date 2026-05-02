@@ -364,7 +364,7 @@ public class CommonController{
         try {
             Runtime runtime = Runtime.getRuntime();
             String path = "/usr/bin/";
-            String cmd = "mysqldump -h127.0.0.1 -uroot -P3306 -p123456 springcloud-alibaba3krib874";
+            String cmd = "mysqldump -h127.0.0.1 -uroot -P3306 -p123456 springcloud-alibaba";
             cmd = path +"/" + cmd;
             Process process = runtime.exec(cmd);
             ByteArrayOutputStream output = new ByteArrayOutputStream();

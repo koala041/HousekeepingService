@@ -1,15 +1,22 @@
 <template>
 	<view class="content">
 		<view class="login-box" :style="{'backgroundImage': indexBgUrl?`url(${$base.url + indexBgUrl})`:''}">
-			<view :style='{"padding":"0 40rpx","flexWrap":"wrap","display":"flex","width":"100%","position":"relative","justifyContent":"center","height":"auto"}'>
+			<view class="login-card" :style='{"padding":"0 40rpx","flexWrap":"wrap","display":"flex","width":"100%","position":"relative","justifyContent":"center","height":"auto"}'>
 				<image :style='{"width":"180rpx","margin":"0 auto 48rpx auto","borderRadius":"160rpx","display":"none","height":"180rpx"}' :src="indexLogoUrl?($base.url + indexLogoUrl):'/static/service.png'" mode="aspectFill"></image>
-				<view v-if="loginType==1" :style='{"border":"0px solid #ff6f9f50","margin":"0 0 24rpx 0","borderRadius":"60rpx","background":"none","display":"flex","width":"100%","height":"auto"}' class="uni-form-item uni-column">
+				<view v-if="loginType==1" :style='{"border":"0px solid #ff6f9f50","margin":"0 0 24rpx 0","borderRadius":"60rpx","background":"none","display":"flex","width":"100%","height":"auto"}' class="uni-form-item uni-column login-row">
 					<view :style='{"whiteSpace":"nowrap","color":"#333","textAlign":"right","width":"auto","fontSize":"28rpx","lineHeight":"80rpx","minWidth":"144rpx","height":"88rpx"}' class="label">账号：</view>
-					<input v-model="username" :style='{"padding":"0px 24rpx","margin":"0px","borderColor":"#ff6f9f50","color":"#333","borderRadius":"40rpx","flex":"1","background":"#ffffff90","borderWidth":"2rpx","fontSize":"28rpx","lineHeight":"88rpx","borderStyle":"solid","height":"88rpx"}' type="text" class="uni-input" name="" placeholder="请输入账号" />
+					<input v-model="username" :style='{"padding":"0px 24rpx","margin":"0px","borderColor":"#ff6f9f50","color":"#333","borderRadius":"40rpx","flex":"1","background":"#ffffff90","borderWidth":"2rpx","fontSize":"28rpx","lineHeight":"88rpx","borderStyle":"solid","height":"88rpx"}' type="text" class="uni-input login-input" name="" placeholder="请输入账号" />
 				</view>
-				<view v-if="loginType==1" :style='{"border":"0px solid #ff6f9f50","margin":"0 0 24rpx 0","borderRadius":"60rpx","background":"none","display":"flex","width":"100%","height":"auto"}' class="uni-form-item uni-column">
+				<view v-if="loginType==1" :style='{"border":"0px solid #ff6f9f50","margin":"0 0 24rpx 0","borderRadius":"60rpx","background":"none","display":"flex","width":"100%","height":"auto"}' class="uni-form-item uni-column login-row">
 					<view :style='{"whiteSpace":"nowrap","color":"#333","textAlign":"right","width":"auto","fontSize":"28rpx","lineHeight":"80rpx","minWidth":"144rpx","height":"88rpx"}' class="label">密码：</view>
-					<input v-model="password" password :style='{"padding":"0px 24rpx","margin":"0px","borderColor":"#ff6f9f50","color":"#333","borderRadius":"40rpx","flex":"1","background":"#ffffff90","borderWidth":"2rpx","fontSize":"28rpx","lineHeight":"88rpx","borderStyle":"solid","height":"88rpx"}' type="password" class="uni-input" name="" placeholder="请输入密码" />
+					<input v-model="password" password :style='{"padding":"0px 24rpx","margin":"0px","borderColor":"#ff6f9f50","color":"#333","borderRadius":"40rpx","flex":"1","background":"#ffffff90","borderWidth":"2rpx","fontSize":"28rpx","lineHeight":"88rpx","borderStyle":"solid","height":"88rpx"}' type="password" class="uni-input login-input" name="" placeholder="请输入密码" />
+				</view>
+				<view v-if="loginType==1" class="captcha-row">
+					<view class="captcha-label">校验码：</view>
+					<input v-model.trim="captchaInput" type="text" maxlength="4" class="uni-input login-input captcha-input" placeholder="请输入校验码" />
+					<view class="captcha-code" @tap="refreshCaptcha">
+						<text v-for="(item, codeIndex) in captchaChars" :key="codeIndex" :style="{transform: item.rotate, color: item.color}">{{item.char}}</text>
+					</view>
 				</view>
 				<view v-if="loginType==4" :style='{"border":"0px solid #ff6f9f50","margin":"0 0 24rpx 0","borderRadius":"60rpx","background":"none","display":"flex","width":"100%","height":"auto"}' class="uni-form-item uni-column">
 					<view :style='{"whiteSpace":"nowrap","color":"#333","textAlign":"right","width":"auto","fontSize":"28rpx","lineHeight":"80rpx","minWidth":"144rpx","height":"88rpx"}' class="label">手机号：</view>
@@ -64,6 +71,8 @@
 			return {
 				username: '',
 				password: '',
+				captchaInput: '',
+				captchaCode: '',
 				loginType:1,
 				phone: '',
 				phonecode: '',
@@ -125,6 +134,16 @@
 			}
 		},
 		computed: {
+			captchaChars: function() {
+				const colors = ['#ff6f9f', '#2dc7a3', '#ffaa33', '#5b6ee1'];
+				return this.captchaCode.split('').map((char, index) => {
+					return {
+						char,
+						color: colors[index % colors.length],
+						rotate: `rotate(${index % 2 === 0 ? '-' : ''}${8 + index * 3}deg)`
+					}
+				})
+			},
 			emailText: function() {
 				var time = this.count;
 				if (null != time && "" != time) {
@@ -147,6 +166,7 @@
 				this.index = 1;
 			}	
 			this.options = options;
+			this.refreshCaptcha();
 			this.styleChange()
 			
 		},
@@ -155,6 +175,15 @@
 		mounted() {
 		},
 		methods: {
+			refreshCaptcha() {
+				const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+				let code = '';
+				for (let i = 0; i < 4; i++) {
+					code += chars.charAt(Math.floor(Math.random() * chars.length));
+				}
+				this.captchaCode = code;
+				this.captchaInput = '';
+			},
 			async phoneClick() {
 				var roles = ''
 				if(!this.phone){
@@ -248,6 +277,15 @@
 						this.$utils.msg('请选择登录用户类型')
 						return
 					}
+					if (!this.captchaInput) {
+						this.$utils.msg('请输入校验码')
+						return
+					}
+					if (this.captchaInput.toUpperCase() !== this.captchaCode) {
+						this.$utils.msg('校验码错误，请重新输入')
+						this.refreshCaptcha()
+						return
+					}
 				}
 				if(this.loginType==4) {
 					if (!this.phone) {
@@ -298,6 +336,7 @@
 			},
 			changeLogin(type){
 				this.loginType = type
+				if(type==1) this.refreshCaptcha()
 			},
 			optionsChange(e) {
 				this.index = e.target.value
@@ -316,10 +355,132 @@
 		box-sizing: border-box;
 	}
 	.login-box {
-		padding: 160rpx 24rpx 24rpx 24rpx;
-		background: radial-gradient(circle at 20% 12%, #fff 0, #fff 90rpx, transparent 220rpx), linear-gradient(180deg, #fff1f5 0%, #ffe6ee 58%, #fff9f6 100%);
+		padding: 110rpx 28rpx 40rpx 28rpx;
+		background: radial-gradient(circle at 18% 8%, rgba(255,255,255,.95) 0, rgba(255,255,255,.9) 92rpx, transparent 230rpx), radial-gradient(circle at 86% 18%, rgba(45,199,163,.18) 0, rgba(45,199,163,.08) 170rpx, transparent 330rpx), linear-gradient(160deg, #fff7f3 0%, #fff0f5 48%, #eafff8 100%);
 		width: 100%;
 		min-height: 100%;
 		height: auto;
+		box-sizing: border-box;
+		overflow: hidden;
+		position: relative;
+	}
+	.login-box::before {
+		content: '';
+		position: absolute;
+		z-index: 0;
+		right: -90rpx;
+		top: 72rpx;
+		width: 300rpx;
+		height: 300rpx;
+		border-radius: 46% 54% 42% 58%;
+		background: rgba(255,111,159,.14);
+	}
+	.login-box::after {
+		content: '安心家政';
+		position: absolute;
+		z-index: 0;
+		left: 52rpx;
+		top: 48rpx;
+		color: #ff6f9f;
+		font-size: 30rpx;
+		font-weight: 700;
+		letter-spacing: 4rpx;
+	}
+	.login-card {
+		position: relative !important;
+		z-index: 1;
+		padding: 52rpx 40rpx 44rpx !important;
+		border: 2rpx solid rgba(255, 111, 159, .12);
+		border-radius: 44rpx;
+		background: rgba(255,255,255,.86);
+		box-shadow: 0 28rpx 70rpx rgba(255,111,159,.18), 0 12rpx 32rpx rgba(45,199,163,.1);
+		backdrop-filter: blur(12rpx);
+		box-sizing: border-box;
+	}
+	.login-row .label,
+	.captcha-label {
+		color: #4b4b4b !important;
+		font-weight: 600;
+	}
+	.login-input,
+	.uni-input {
+		outline: none !important;
+		-webkit-appearance: none;
+		-webkit-tap-highlight-color: transparent;
+		box-shadow: none !important;
+		box-sizing: border-box;
+		transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+	}
+	.login-input:focus,
+	.uni-input:focus,
+	input:focus {
+		outline: none !important;
+		border-color: rgba(255,111,159,.55) !important;
+		box-shadow: 0 0 0 4rpx rgba(255,111,159,.12) !important;
+		background: rgba(255,255,255,.96) !important;
+	}
+	.captcha-row {
+		margin: 0 0 24rpx 0;
+		display: flex;
+		width: 100%;
+		align-items: center;
+	}
+	.captcha-label {
+		white-space: nowrap;
+		text-align: right;
+		min-width: 144rpx;
+		font-size: 28rpx;
+		line-height: 88rpx;
+		height: 88rpx;
+	}
+	.captcha-input {
+		padding: 0 24rpx;
+		border: 2rpx solid rgba(255,111,159,.32);
+		border-radius: 40rpx;
+		color: #333;
+		font-size: 28rpx;
+		line-height: 88rpx;
+		height: 88rpx;
+		background: rgba(255,255,255,.72);
+		flex: 1;
+	}
+	.captcha-code {
+		margin-left: 16rpx;
+		width: 176rpx;
+		height: 88rpx;
+		border-radius: 36rpx;
+		background: repeating-linear-gradient(-35deg, rgba(255,111,159,.12) 0, rgba(255,111,159,.12) 10rpx, rgba(45,199,163,.12) 10rpx, rgba(45,199,163,.12) 20rpx), #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: inset 0 0 0 2rpx rgba(255,111,159,.16);
+	}
+	.captcha-code text {
+		margin: 0 4rpx;
+		font-size: 34rpx;
+		font-weight: 800;
+		letter-spacing: 2rpx;
+		display: inline-block;
+	}
+	.btn-submit {
+		background: linear-gradient(135deg, #ff6f9f 0%, #ff9a76 100%) !important;
+		box-shadow: 0 16rpx 32rpx rgba(255,111,159,.26);
+		font-weight: 700;
+	}
+	.link-highlight {
+		box-shadow: 0 10rpx 24rpx rgba(255,111,159,.12);
+	}
+	.idea1 {
+		color: #24332f;
+		font-weight: 800;
+		letter-spacing: 2rpx;
+	}
+	@media screen and (max-width: 360px) {
+		.captcha-code {
+			width: 150rpx;
+		}
+		.captcha-code text {
+			font-size: 30rpx;
+		}
 	}
 </style>

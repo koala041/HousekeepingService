@@ -2,7 +2,7 @@
 	<div style="height: 100%;">
 		<el-main :style='"vertical" == "vertical" ? (2 == 1 ? {"minHeight":"100%","padding":"0","margin":"0 0 0 210px","position":"relative","display":"block"} : (2 == 2 ? (isCollapse ? {"minHeight":"100%","padding":"0","margin":"50px 0 0 64px","position":"relative","display":"block"} : {"minHeight":"100%","padding":"60px 0 0 200px","margin":"0","position":"relative","background":"#fff","display":"block"}) : "")) : {"minHeight":"100%","margin":"0","position":"relative"}'>
 			<!-- top -->
-			<index-header :style='{"boxShadow":"0 0px 1px #f6f6f6","padding":"0 20px 0 20px","alignItems":"center","color":"#fff","display":"flex","justifyContent":"flex-end","top":"0","left":"0","background":"url(http://codegen.caihongy.cn/20260126/97d91f7aa6504b4f90ab9e3dce27ba90.jpg) no-repeat right center / auto 100%,#2dc7a3","width":"calc(100% - 0px)","position":"fixed","zIndex":"1002","height":"60px"}'></index-header>
+			<index-header :style='{"boxShadow":"0 10px 28px rgba(251, 106, 151, .16)","padding":"0 20px 0 20px","alignItems":"center","color":"#fff","display":"flex","justifyContent":"flex-end","top":"0","left":"0","background":"radial-gradient(circle at 82% 18%, rgba(255,255,255,.24) 0 36px, transparent 37px), linear-gradient(90deg, #fb6a97 0%, #ff8ab1 50%, #ffb6cf 100%)","width":"calc(100% - 0px)","position":"fixed","zIndex":"1002","height":"60px"}'></index-header>
 			
 			<!-- menu -->
 			<template v-if="'vertical' == 'vertical'">
@@ -10,7 +10,7 @@
 				<index-aside :style='{"boxShadow":"1px 0 6px  rgba(64, 158, 255, .3)","overflow":"hidden","top":"0","left":"0","background":"#304156","bottom":"0","width":"210px","fontSize":"0px","position":"fixed","height":"100%","zIndex":"1001"}'></index-aside>
 			  </template>
 			  <template v-if="2 == 2">
-				<index-aside :is-collapse="isCollapse" @oncollapsechange="collapseChange" :style='isCollapse ? {"boxShadow":"1px 0 0px  #f6f6f6","overflow":"hidden","top":"0","left":"0","background":"#fff","bottom":"0","width":"64px","fontSize":"0px","position":"fixed","transition":"width 0.3s","height":"100%","zIndex":"1001"} : {"boxShadow":"0px 0 3px  #f6f6f6","padding":"10px 0 0 15px","overflow":"hidden","top":"0px","left":"0","background":"#2dc7a3","bottom":"0","width":"200px","position":"fixed","transition":"width 0.3s","height":"100%","zIndex":"1001"}'></index-aside>
+				<index-aside :is-collapse="isCollapse" @oncollapsechange="collapseChange" :style='isCollapse ? {"boxShadow":"1px 0 0px rgba(255, 111, 159, .18)","overflow":"hidden","top":"0","left":"0","background":"linear-gradient(180deg, #ffe3ee 0%, #ffc3db 100%)","bottom":"0","width":"64px","fontSize":"0px","position":"fixed","transition":"width 0.3s","height":"100%","zIndex":"1001"} : {"boxShadow":"8px 0 24px rgba(255, 111, 159, .16)","padding":"10px 0 0 0","overflow":"hidden","top":"0px","left":"0","background":"linear-gradient(180deg, #ffe3ee 0%, #ffc3db 100%)","bottom":"0","width":"200px","position":"fixed","transition":"width 0.3s","height":"100%","zIndex":"1001"}'></index-aside>
 			  </template>
 			</template>
 			<template v-if="'vertical' == 'horizontal'">

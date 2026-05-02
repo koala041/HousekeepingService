@@ -1,5 +1,4 @@
-  
-<template>
+  <template>
 	<div class="main-content" :style='{"width":"100%","padding":"20px","fontSize":"14px","color":"#666","height":"auto"}'>
 		<!-- 列表页 -->
 		<template v-if="showFlag  &&!statType ">

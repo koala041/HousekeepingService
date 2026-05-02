@@ -28,6 +28,7 @@ Vue.use(VueJsonp)
 Vue.prototype.$utils = utils
 Vue.prototype.$config = config
 Vue.prototype.$base = base
+Vue.prototype.$fileUrl = path => base.fileUrl(path)
 Vue.prototype.$api = api
 Vue.prototype.$validate = validate
 // 判断权限方法

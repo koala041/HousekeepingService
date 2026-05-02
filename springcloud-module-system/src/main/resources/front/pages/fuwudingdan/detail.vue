@@ -332,7 +332,7 @@
 			if(crossCleanType) {
 				uni.removeStorageSync('crossCleanType')
 				res = await this.$api.info('fuwudingdan', this.id);
-				let reg=new RegExp('http://localhost:8080/springcloud-alibaba3krib874/upload','g')//g代表全部
+				let reg=new RegExp('http://localhost:8080/springcloud-alibaba/upload','g')//g代表全部
 				this.detail = res.data;
 				this.title = this.detail.xiangmubianhao
 			}
@@ -428,7 +428,7 @@
 				} else if (res.data.headportrait) {
 					this.fpic = res.data.headportrait.split(',')[0]
 				}
-				let reg=new RegExp('http://localhost:8080/springcloud-alibaba3krib874/upload','g')//g代表全部
+				let reg=new RegExp('http://localhost:8080/springcloud-alibaba/upload','g')//g代表全部
 				let that = this
 				let longitude1,longitude2,latitude1,latitude2
 				let waypoints = []

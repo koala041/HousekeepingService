@@ -13,10 +13,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: springcloud-alibaba3krib874
-          uri: lb://springcloud-alibaba3krib874
+        - id: springcloud-alibaba
+          uri: lb://springcloud-alibaba
           predicates:
-            - Path=/springcloud-alibaba3krib874/**
+            - Path=/springcloud-alibaba/**
           filters:
             - StripPrefix=1
 

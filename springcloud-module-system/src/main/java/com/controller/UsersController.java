@@ -62,6 +62,8 @@ public class UsersController {
 	@IgnoreAuth
 	@RequestMapping(value = "/login")
 	public R login(String username, String password, String captcha, HttpServletRequest request) {
+        System.out.println("管理员信息：" + username);
+        System.out.println("管理员信息：" + password);
         // 根据登录查询用户信息
         UsersEntity u = usersService.selectOne(new EntityWrapper<UsersEntity>().eq("username", username));
         if(u==null || !u.getPassword().equals(password)) {

@@ -35,8 +35,8 @@
 						<span :style="verticalStyle2[isCollapse?'close':'open'].user.one.title.default"
 							slot="title">{{verticalStyle2.open.user.one.title.text}}</span>
 					</template>
-					<el-menu-item index="/updatePassword" @click="menuHandler('updatePassword')">修改密码</el-menu-item>
-					<el-menu-item index="/center" @click="menuHandler('center')">个人信息</el-menu-item>
+					<el-menu-item index="/updatePassword" @click="menuHandler('updatePassword')"><i class="el-icon-edit-outline nav-child-icon"></i>修改密码</el-menu-item>
+					<el-menu-item index="/center" @click="menuHandler('center')"><i class="el-icon-user nav-child-icon"></i>个人信息</el-menu-item>
 				</el-submenu>
 				<template v-for="(menu,index) in menuList.backMenu" v-if="menu.child.length&&menu.child[0].tableName!='hasBoard'&&menu.child[0].tableName!='storeup'&&(menu.child[0].tableName.length<=7||(menu.child[0].tableName.length>7&&menu.child[0].tableName.substring(0,7)!='chapter'))">
 					<el-submenu v-if="menu.child.length > 1 || !verticalIsMultiple" class="other" popper-class="other" :popper-append-to-body="false" :style="verticalStyle2[isCollapse?'close':'open'].menu.one.box.default" :index="index+2+''">
@@ -44,7 +44,7 @@
 							<i :style="verticalStyle2[isCollapse?'close':'open'].menu.one.icon.default" class="el-icon-menu" :class="icons[index]"></i>
 							<span :style="verticalStyle2[isCollapse?'close':'open'].menu.one.title.default" slot="title">{{nameChange(menu.menu, verticalFlag)}}</span>
 						</template>
-						<el-menu-item v-for="(child,sort) in menu.child" :key="sort" :index="'/'+child.tableName" @click="menuHandler(child.tableName)">{{ child.menu }}</el-menu-item>
+						<el-menu-item v-for="(child,sort) in menu.child" :key="sort" :index="'/'+child.tableName" @click="menuHandler(child.tableName)"><i class="el-icon-folder-opened nav-child-icon"></i>{{ child.menu }}</el-menu-item>
 					</el-submenu>
 					<el-menu-item v-if="menu.child.length <= 1 && verticalIsMultiple" class="other" popper-class="other" :style="verticalStyle2[isCollapse?'close':'open'].menu.one.box.default" @click="menuHandler(menu.child[0].tableName)" :index="'/'+menu.child[0].tableName">
 						<div class="el-tooltip">
@@ -1161,5 +1161,422 @@ export default {
 		color: #333;
 		line-height: 40px;
 		height: 40px;
+	}
+
+	.menu-preview {
+		background: #2f4156;
+		color: #b8cbe0;
+		font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+	}
+
+	.menu-preview ::v-deep .el-scrollbar__wrap,
+	.menu-preview ::v-deep .scrollbar-wrapper-open,
+	.menu-preview ::v-deep .scrollbar-wrapper-close,
+	.menu-preview ::v-deep .el-menu {
+		background: #2f4156 !important;
+	}
+
+	.menu-preview ::v-deep .el-scrollbar__bar {
+		display: none;
+	}
+
+	.menu-preview .el-button {
+		display: none !important;
+	}
+
+	.menu-preview .title,
+	.menu-preview .userinfo {
+		display: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 {
+		padding-top: 72px !important;
+		border: 0 !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu {
+		margin: 0 !important;
+		background: transparent !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title {
+		clip-path: none !important;
+		height: 54px !important;
+		line-height: 54px !important;
+		padding: 0 22px !important;
+		text-align: left !important;
+		color: #c4d6e8 !important;
+		background: #2f4156 !important;
+		border: 0 !important;
+		font-size: 15px !important;
+		font-weight: 500 !important;
+		letter-spacing: .5px;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user.is-active ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other.is-active ::v-deep .el-submenu__title {
+		color: #fff !important;
+		background: linear-gradient(90deg, rgba(251, 106, 151, .32), rgba(251, 106, 151, .08)) !important;
+		border-left: 4px solid #ff8ab1 !important;
+		padding-left: 18px !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu .el-menu .el-menu-item {
+		height: 44px !important;
+		line-height: 44px !important;
+		padding: 0 20px 0 56px !important;
+		border-radius: 0 !important;
+		text-align: left !important;
+		color: #b8cbe0 !important;
+		background: #223346 !important;
+		font-size: 14px !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu .el-menu .el-menu-item.is-active {
+		color: #ffb6cf !important;
+		background: rgba(251, 106, 151, .16) !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-submenu__title .el-submenu__icon-arrow {
+		right: 22px !important;
+		color: #7f98ae !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-submenu__title .el-icon-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item .el-icon-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item .iconfont {
+		display: inline-block !important;
+		width: 22px !important;
+		margin-right: 12px !important;
+		color: #a9bfd4 !important;
+		font-size: 15px !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title {
+		border-left: 4px solid transparent !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user.is-active ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other.is-active ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title:hover {
+		background: linear-gradient(90deg, rgba(255, 111, 159, .38), rgba(255, 138, 177, .08)) !important;
+		border-left-color: #ff6f9f !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item {
+		position: relative !important;
+		width: calc(100% - 24px) !important;
+		margin: 6px 12px !important;
+		padding: 0 14px 0 42px !important;
+		border-radius: 10px !important;
+		line-height: 42px !important;
+		height: 42px !important;
+		text-align: left !important;
+		color: #d8e5f3 !important;
+		background: rgba(255, 255, 255, .04) !important;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .04) !important;
+		font-size: 14px !important;
+		font-weight: 500 !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item::before {
+		content: "";
+		position: absolute;
+		left: 18px;
+		top: 50%;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: #7f98ae;
+		transform: translateY(-50%);
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item.is-active,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item.is-active,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item.is-active {
+		color: #fff !important;
+		background: linear-gradient(90deg, rgba(255, 111, 159, .42), rgba(255, 182, 207, .16)) !important;
+		box-shadow: inset 0 0 0 1px rgba(255, 182, 207, .36), 0 8px 18px rgba(26, 38, 52, .18) !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item:hover::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item.is-active::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item:hover::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item.is-active::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item:hover::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item.is-active::before {
+		background: #ffd6e4;
+		box-shadow: 0 0 0 4px rgba(255, 111, 159, .18);
+	}
+
+	.menu-preview,
+	.menu-preview ::v-deep .el-scrollbar__wrap,
+	.menu-preview ::v-deep .scrollbar-wrapper-open,
+	.menu-preview ::v-deep .scrollbar-wrapper-close,
+	.menu-preview ::v-deep .el-menu {
+		background: linear-gradient(180deg, #ffe3ee 0%, #ffd2e4 48%, #ffc3db 100%) !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 {
+		padding: 72px 10px 18px !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu {
+		margin: 8px 0 !important;
+		border-radius: 16px !important;
+		overflow: hidden !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title {
+		height: 50px !important;
+		line-height: 50px !important;
+		padding: 0 18px !important;
+		border: 1px solid rgba(255, 255, 255, .68) !important;
+		border-left: 0 !important;
+		border-radius: 16px !important;
+		color: #8a3c59 !important;
+		background: rgba(255, 255, 255, .54) !important;
+		box-shadow: 0 10px 22px rgba(255, 107, 151, .12) !important;
+		font-weight: 600 !important;
+		text-align: left !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user.is-active ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other.is-active ::v-deep .el-submenu__title {
+		color: #fff !important;
+		background: linear-gradient(135deg, #ff72a4 0%, #ff93bb 100%) !important;
+		border-color: rgba(255, 255, 255, .8) !important;
+		box-shadow: 0 12px 26px rgba(255, 91, 143, .28) !important;
+		padding-left: 18px !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-menu {
+		margin: 8px 0 2px !important;
+		padding: 8px !important;
+		border-radius: 16px !important;
+		background: #ffe3ee !important;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22) !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item {
+		width: 100% !important;
+		margin: 6px 0 !important;
+		padding: 0 12px 0 16px !important;
+		border-radius: 12px !important;
+		color: rgba(255, 255, 255, .9) !important;
+		background: rgba(116, 32, 66, .16) !important;
+		box-shadow: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item::before,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item::before {
+		display: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item.is-active,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item.is-active,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item.is-active {
+		color: #9c315d !important;
+		background: #fff7fb !important;
+		box-shadow: 0 8px 18px rgba(141, 36, 82, .18) !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .nav-child-icon {
+		width: 22px !important;
+		margin: 0 10px 0 0 !important;
+		color: inherit !important;
+		font-size: 15px !important;
+		text-align: center !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-submenu__title .el-submenu__icon-arrow {
+		right: 18px !important;
+		color: inherit !important;
+	}
+
+	/* 粉色家政主题：一级浅粉、二级深粉，覆盖生成器旧样式 */
+	.menu-preview,
+	.menu-preview ::v-deep .el-scrollbar,
+	.menu-preview ::v-deep .el-scrollbar__wrap,
+	.menu-preview ::v-deep .scrollbar-wrapper,
+	.menu-preview ::v-deep .scrollbar-wrapper-open,
+	.menu-preview ::v-deep .el-menu-vertical-2,
+	.menu-preview ::v-deep .el-menu {
+		background: linear-gradient(180deg, #fff1f7 0%, #ffdce9 48%, #ffc7dc 100%) !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 {
+		padding: 76px 12px 18px !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu {
+		height: auto !important;
+		margin: 9px 0 !important;
+		background: transparent !important;
+		overflow: visible !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title {
+		display: flex !important;
+		align-items: center !important;
+		height: 48px !important;
+		line-height: 48px !important;
+		padding: 0 17px !important;
+		border: 1px solid rgba(255, 255, 255, .72) !important;
+		border-radius: 14px !important;
+		color: #8d3a5b !important;
+		background: linear-gradient(135deg, rgba(255,255,255,.78), rgba(255,238,246,.58)) !important;
+		box-shadow: 0 8px 20px rgba(255, 96, 145, .12) !important;
+		font-size: 15px !important;
+		font-weight: 600 !important;
+		letter-spacing: .2px !important;
+		text-align: left !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.home.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other>.el-tooltip:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item.other.is-active>.el-tooltip,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user.is-active ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other ::v-deep .el-submenu__title:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other.is-active ::v-deep .el-submenu__title,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.is-opened ::v-deep .el-submenu__title {
+		color: #fff !important;
+		background: linear-gradient(135deg, #ff6f9f 0%, #ff94bb 100%) !important;
+		border-color: rgba(255,255,255,.86) !important;
+		box-shadow: 0 10px 24px rgba(255, 89, 142, .28) !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item .el-icon-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2>.el-menu-item .iconfont,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-submenu__title .el-icon-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-submenu__title .iconfont {
+		display: inline-block !important;
+		width: 22px !important;
+		margin: 0 12px 0 0 !important;
+		color: inherit !important;
+		font-size: 15px !important;
+		text-align: center !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-submenu__title .el-submenu__icon-arrow {
+		right: 17px !important;
+		color: inherit !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu ::v-deep .el-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu {
+		margin: 8px 0 0 !important;
+		padding: 8px !important;
+		border-radius: 14px !important;
+		background: #ffe3ee !important; /* 二级导航背景色 */
+		box-shadow: inset 0 1px 0 rgba(255,255,255,.26), 0 10px 24px rgba(218, 75, 126, .18) !important;
+	}
+	
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item {
+		display: flex !important;
+		align-items: center !important;
+		width: 100% !important;
+		height: 40px !important;
+		line-height: 40px !important;
+		margin: 6px 0 !important;
+		padding: 0 13px !important;
+		border: 1px solid rgba(255,255,255,.18) !important;
+		border-radius: 12px !important;
+		color: rgba(255,255,255,.92) !important;
+		background: rgba(123, 29, 68, .14) !important;
+		box-shadow: none !important;
+		font-size: 14px !important;
+		font-weight: 500 !important;
+		text-align: left !important;
+		text-decoration: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu .el-menu .el-menu-item::before {
+		display: none !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu .el-menu .el-menu-item .nav-child-icon {
+		display: inline-block !important;
+		width: 22px !important;
+		margin: 0 10px 0 0 !important;
+		color: inherit !important;
+		font-size: 15px !important;
+		text-align: center !important;
+	}
+
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.other .el-menu .el-menu-item.is-active,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.user .el-menu .el-menu-item.is-active,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item:hover,
+	.scrollbar-wrapper-open .el-menu-vertical-2 .el-submenu.home .el-menu .el-menu-item.is-active {
+		color: #a73861 !important;
+		background: #fff7fb !important;
+		border-color: #fff !important;
+		box-shadow: 0 8px 18px rgba(133, 35, 76, .18) !important;
+		text-decoration: none !important;
 	}
 </style>

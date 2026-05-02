@@ -474,7 +474,7 @@
 					// 获取光标所在位置
 					const selection = quill.getSelection();
 					let length = selection ? selection.index : quill.getLength();
-					const fileUrl = this.$base.url + "upload/" + res.file;
+					const fileUrl = this.$fileUrl(res.file);
 					if (this.uploadEmbedType === "file") {
 						const fileName = file && file.name ? file.name : (res.file || "下载文件");
 						const safeFileName = String(fileName).replace(/"/g, "&quot;");

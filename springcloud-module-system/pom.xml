@@ -48,7 +48,7 @@
     </dependencies>
 
     <build>
-        <finalName>springcloud-alibaba3krib874</finalName>
+        <finalName>springcloud-alibaba</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

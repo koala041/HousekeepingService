@@ -1,7 +1,10 @@
 <template>
 	<div class="navbar">
 		<div class="title">
-			<span class="title-name">{{this.$project.projectName}}</span>
+			<!-- 左边Logo -->
+			<img class="title-icon" src="@/assets/logo2.png" alt="logo" />
+			<!-- 右边项目名 -->
+			<span class="title-name">{{ this.$project.projectName }}</span>
 		</div>
 		<el-dropdown class="dropdown-box" @command="handleCommand" trigger="click">
 			<div class="el-dropdown-link">
@@ -656,15 +659,28 @@
 	.navbar {
 		.title {
 			margin: 0 auto 0 0;
-			display: block;
-			.title-name {
-				padding: 0;
-				color: #fff;
-				font-weight: 500;
-				font-size: 22px;
-				line-height: 44px;
-				float: left;
-			}
+			/* 让图标+文字同行 */
+			display: flex;
+			align-items: center;
+			/* 和文字间距 */
+			gap: 10px;
+		}
+
+		.title-icon {
+		// 控制图片大小，和文字高度匹配
+		width: 24px;
+		height: 24px;
+		object-fit: contain; // 防止图片变形
+		}
+
+		.title-name {
+			padding: 0;
+			color: #fff;
+			font-weight: 500;
+			font-size: 22px;
+			line-height: 44px;
+			/* 去掉原来的 float，用 flex 更稳定 */
+			/* float: left; */
 		}
 		.dropdown-box {
 			color: inherit;

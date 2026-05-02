@@ -1,5 +1,4 @@
-  
-<template>
+  <template>
 	<div class="main-content" :style='{"width":"100%","padding":"20px","fontSize":"14px","color":"#666","height":"auto"}'>
 		<div class="kb-guide">
 			<div class="kb-title">智能客服知识库</div>

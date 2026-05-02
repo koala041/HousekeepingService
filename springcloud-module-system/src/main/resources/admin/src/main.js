@@ -49,6 +49,7 @@ Vue.prototype.$validate = validate
 Vue.prototype.$http = http // ajax请求方法
 Vue.prototype.$echarts = echarts
 Vue.prototype.$base = base.get()
+Vue.prototype.$fileUrl = path => base.fileUrl(path)
 Vue.prototype.$project = base.getProjectName()
 Vue.prototype.$storage = storage
 Vue.prototype.$api = api

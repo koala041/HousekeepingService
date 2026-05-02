@@ -7,7 +7,8 @@
 		</view>
 
 		<view class="chat-list" :style="{'padding-bottom': (tabBarHeight + 150) + 'px'}">
-			<view v-for="(item,index) in list" :key="index" v-if="item.type!=4" class="message-block">
+			<view v-for="(item,index) in list" :key="item.id || index" v-if="item.type!=4" class="message-block" :class="{'selecting-message': selectMode, 'selected-message': isSelected(item)}" @contextmenu.prevent.stop="openMessageMenu($event, item, index)" @longpress="openMessageMenu($event, item, index)" @tap="handleMessageTap(item)">
+				<view v-if="selectMode && item.id" class="select-check" :class="{'checked': isSelected(item)}">{{isSelected(item) ? '✓' : ''}}</view>
 				<view v-if="item.addtime" class="time-text">{{timeFormat(item.addtime)}}</view>
 				<view v-if="item.ask" class="message-row message-user">
 					<view class="bubble user-bubble">
@@ -40,6 +41,18 @@
 				</view>
 			</view>
 		</view>
+		<view v-if="contextMenu.show" class="context-mask" @tap="closeContextMenu"></view>
+		<view v-if="contextMenu.show" class="context-menu" :style="{left: contextMenu.left + 'px', top: contextMenu.top + 'px'}">
+			<view class="context-menu-item" @tap="copyMessage">复制</view>
+			<view class="context-menu-item" @tap="enterSelectMode">多选</view>
+			<view class="context-menu-item danger" @tap="deleteCurrentMessage">删除</view>
+		</view>
+		<view v-if="selectMode" class="multi-action-bar" :style="{'bottom': (tabBarHeight + 96) + 'px'}">
+			<view class="multi-count">已选择 {{selectedIds.length}} 条</view>
+			<view class="multi-btn danger" @tap="deleteSelectedMessages">删除</view>
+			<view class="multi-btn" @tap="downloadSelectedMessages">下载</view>
+			<view class="multi-btn ghost" @tap="cancelSelectMode">取消</view>
+		</view>
 
 		<view class="input-bar" :style="{'bottom':showType?((118 + tabBarHeight) + 'px'):(tabBarHeight + 'px')}">
 			<image class="more-icon" src="/static/jiahao.png" mode="widthFix" @click="showClick"></image>
@@ -70,7 +83,16 @@
 				lastReply: '',
 				suggestIndex: 0,
 				suggestLoading: false,
-				quickQuestions: ['保洁怎么预约？', '可以线上预约保姆吗？', '下单后可以临时取消预约吗？' ]
+				quickQuestions: ['保洁怎么预约？', '可以线上预约保姆吗？', '下单后可以临时取消预约吗？' ],
+				contextMenu: {
+					show: false,
+					left: 0,
+					top: 0,
+					item: null,
+					index: -1
+				},
+				selectMode: false,
+				selectedIds: []
 			};
 		},
 		async onShow(){
@@ -94,6 +116,112 @@
 			},
 		},
 		methods: {
+			getMessageText(item) {
+				if(!item) return ''
+				const parts = []
+				if(item.ask) parts.push('用户：' + (item.type == 1 ? this.plainText(item.ask) : this.fileUrl(item.ask)))
+				if(item.reply) parts.push('客服：' + (item.type == 1 ? this.plainText(item.displayReply || item.reply) : this.fileUrl(item.reply)))
+				return parts.join('\n')
+			},
+			openMessageMenu(event, item, index) {
+				if(!item || !item.id) return
+				const touch = event && event.changedTouches && event.changedTouches[0]
+				const x = (event && (event.clientX || event.pageX)) || (touch && touch.clientX) || 24
+				const y = (event && (event.clientY || event.pageY)) || (touch && touch.clientY) || 120
+				this.contextMenu = {
+					show: true,
+					left: Math.max(12, Math.min(x, 260)),
+					top: Math.max(80, y),
+					item,
+					index
+				}
+			},
+			closeContextMenu() {
+				this.contextMenu.show = false
+			},
+			copyMessage() {
+				const text = this.getMessageText(this.contextMenu.item)
+				this.closeContextMenu()
+				if(!text) return
+				uni.setClipboardData({
+					data: text,
+					success: () => this.$utils.msg('已复制')
+				})
+			},
+			enterSelectMode() {
+				const item = this.contextMenu.item
+				this.selectMode = true
+				this.selectedIds = item && item.id ? [item.id] : []
+				this.closeContextMenu()
+			},
+			isSelected(item) {
+				return !!(item && item.id && this.selectedIds.indexOf(item.id) > -1)
+			},
+			handleMessageTap(item) {
+				if(this.contextMenu.show) {
+					this.closeContextMenu()
+					return
+				}
+				if(!this.selectMode || !item || !item.id) return
+				const index = this.selectedIds.indexOf(item.id)
+				if(index > -1) this.selectedIds.splice(index, 1)
+				else this.selectedIds.push(item.id)
+			},
+			deleteCurrentMessage() {
+				const item = this.contextMenu.item
+				this.closeContextMenu()
+				if(!item || !item.id) return
+				this.confirmDeleteMessages([item.id])
+			},
+			deleteSelectedMessages() {
+				if(!this.selectedIds.length) {
+					this.$utils.msg('请选择要删除的信息')
+					return
+				}
+				this.confirmDeleteMessages(this.selectedIds.slice())
+			},
+			confirmDeleteMessages(ids) {
+				uni.showModal({
+					title: '删除提示',
+					content: ids.length > 1 ? `确定删除选中的${ids.length}条信息吗？` : '确定删除该条信息吗？',
+					success: async (res) => {
+						if(!res.confirm) return
+						await this.$api.del('chat', ids)
+						this.selectedIds = []
+						this.selectMode = false
+						await this.init()
+						this.$utils.msg('删除成功')
+					}
+				})
+			},
+			downloadSelectedMessages() {
+				if(!this.selectedIds.length) {
+					this.$utils.msg('请选择要下载的信息')
+					return
+				}
+				const text = this.list.filter(item => this.selectedIds.indexOf(item.id) > -1).map((item, index) => {
+					return `【${index + 1}】${item.addtime ? this.timeFormat(item.addtime) : ''}\n${this.getMessageText(item)}`
+				}).join('\n\n')
+				if(typeof document !== 'undefined') {
+					const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+					const url = URL.createObjectURL(blob)
+					const link = document.createElement('a')
+					link.href = url
+					link.download = '在线客服聊天记录.txt'
+					link.click()
+					URL.revokeObjectURL(url)
+					this.$utils.msg('下载成功')
+				} else {
+					uni.setClipboardData({
+						data: text,
+						success: () => this.$utils.msg('当前端暂不支持文件下载，已复制聊天记录')
+					})
+				}
+			},
+			cancelSelectMode() {
+				this.selectMode = false
+				this.selectedIds = []
+			},
 			fileUrl(path) {
 				if(!path) return ''
 				const value = String(path).split(',')[0]
@@ -382,6 +510,11 @@
 		text-align: left;
 	}
 	.chat-list { padding-top: 4rpx; }
+	.message-block { position: relative; border-radius: 28rpx; transition: background .2s ease, box-shadow .2s ease; }
+	.selecting-message { padding-left: 54rpx; }
+	.selected-message { background: rgba(255, 111, 159, .08); box-shadow: inset 0 0 0 2rpx rgba(255, 111, 159, .18); }
+	.select-check { position: absolute; left: 8rpx; top: 50%; transform: translateY(-50%); width: 38rpx; height: 38rpx; line-height: 38rpx; border-radius: 50%; border: 2rpx solid rgba(255,111,159,.5); color: #fff; background: #fff; text-align: center; font-size: 24rpx; font-weight: 700; z-index: 3; }
+	.select-check.checked { background: #ff6f9f; border-color: #ff6f9f; }
 	.time-text { text-align: center; font-size: 22rpx; color: #bc8b9b; margin: 18rpx 0; }
 	.message-row { display: flex; align-items: flex-start; margin: 18rpx 0; }
 	.message-user { justify-content: flex-end; }
@@ -393,6 +526,16 @@
 	.typing-caret { color: #ff6f9f; animation: caret 1s steps(2, start) infinite; }
 	@keyframes caret { 50% { opacity: 0; } }
 	.media-img, .media-video { width: 300rpx; border-radius: 18rpx; }
+	.context-mask { position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 18; background: transparent; }
+	.context-menu { position: fixed; z-index: 19; width: 188rpx; padding: 12rpx; border-radius: 22rpx; background: rgba(255,255,255,.98); box-shadow: 0 16rpx 42rpx rgba(99, 44, 63, .18); border: 1rpx solid rgba(255,111,159,.16); }
+	.context-menu-item { line-height: 72rpx; border-radius: 16rpx; color: #543742; font-size: 28rpx; text-align: center; }
+	.context-menu-item:active { background: #fff1f5; color: #ff6f9f; }
+	.context-menu-item.danger { color: #e55364; }
+	.multi-action-bar { position: fixed; left: 20rpx; right: 20rpx; z-index: 10; display: flex; align-items: center; gap: 14rpx; padding: 14rpx; border-radius: 28rpx; background: rgba(255,255,255,.98); box-shadow: 0 -8rpx 30rpx rgba(206,72,113,.16); }
+	.multi-count { flex: 1; color: #7d4a5c; font-size: 26rpx; font-weight: 700; }
+	.multi-btn { min-width: 112rpx; line-height: 66rpx; padding: 0 18rpx; border-radius: 999rpx; color: #d94f7b; background: #fff1f5; text-align: center; font-size: 26rpx; }
+	.multi-btn.danger { color: #fff; background: #ff6f9f; }
+	.multi-btn.ghost { color: #7d4a5c; background: #f7f0f2; }
 	.input-bar { position: fixed; left: 20rpx; right: 20rpx; display: flex; align-items: center; padding: 16rpx; border-radius: 999rpx; background: rgba(255,255,255,.96); box-shadow: 0 -8rpx 30rpx rgba(206, 72, 113, .16); z-index: 9; }
 	.more-icon { width: 46rpx; margin: 0 14rpx 0 4rpx; }
 	.chat-input { flex: 1; height: 72rpx; padding: 0 24rpx; border-radius: 999rpx; background: #fff5f8; color: #543742; font-size: 28rpx; }

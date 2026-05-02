@@ -107,7 +107,7 @@
     },
     "h5" : {
         "router" : {
-            "base" : "/springcloud-alibaba3krib874/front/h5/"
+            "base" : "/springcloud-alibaba/front/h5/"
         },
         "sdkConfigs" : {
             "maps" : {

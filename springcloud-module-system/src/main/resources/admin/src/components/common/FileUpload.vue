@@ -200,20 +200,23 @@
 				var fileArray = [];
 				var fileUrlArray = [];
 				// 有些图片不是公开的，所以需要携带token信息做权限校验
-				var token = storage.get("token");
+				var token = storage.get("Token");
 				let _this = this;
 				fileList.forEach(function(item, index) {
-					var url = item.url.split("?")[0];
-					if (!url.startsWith("http")) {
-						url = _this.$base.url + url
+					var rawUrl = item.url.split("?")[0].replace(/\\/g, '/');
+					var uploadIndex = rawUrl.indexOf('/upload/');
+					var saveUrl = uploadIndex >= 0 ? rawUrl.substring(uploadIndex + 1) : rawUrl;
+					if (!saveUrl.startsWith('upload/') && !saveUrl.startsWith('http')) {
+						saveUrl = 'upload/' + saveUrl.replace(/^\/+/, '')
 					}
+					var url = saveUrl.startsWith("http") ? saveUrl : _this.$base.url + saveUrl;
 					var name = item.name;
 					var file = {
 						name: name,
 						url: url + "?token=" + token
 					};
 					fileArray.push(file);
-					fileUrlArray.push(url);
+					fileUrlArray.push(saveUrl);
 				});
 				this.fileList = fileArray;
 				this.fileUrlList = fileUrlArray;

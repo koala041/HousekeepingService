@@ -375,7 +375,7 @@
 				let _this = this;
 				_this.$api.upload(function(res) {
 					_this.editorCtx.insertImage({
-						src: _this.$base.url + 'upload/' + res.file,
+						src: _this.$fileUrl(res.file),
 						alt: '图像',
 						success: function() {
 							console.log('insert image success')

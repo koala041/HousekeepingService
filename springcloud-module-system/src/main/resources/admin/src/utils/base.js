@@ -1,15 +1,30 @@
 const base = {
+	fileUrl(path) {
+		if (!path) return ''
+		let url = String(path).split('?')[0].trim()
+		if (!url) return ''
+		url = url.replace(/\\/g, '/')
+		const uploadIndex = url.indexOf('/upload/')
+		if (uploadIndex >= 0) {
+			url = url.substring(uploadIndex + 1)
+		}
+		if (/^https?:\/\//i.test(url)) return url
+		if (!url.startsWith('upload/')) {
+			url = 'upload/' + url.replace(/^\/+/, '')
+		}
+		return this.get().url + url
+	},
 	get() {
 		return {
-			url : "http://localhost:8080/springcloud-alibaba3krib874/",
-			name: "springcloud-alibaba3krib874",
+			url : "http://localhost:8080/springcloud-alibaba/",
+			name: "springcloud-alibaba",
 			// 退出到首页链接
-			indexUrl: 'http://localhost:8080/springcloud-alibaba3krib874/front/h5/index.html'
+			indexUrl: 'http://localhost:8080/springcloud-alibaba/front/h5/index.html'
 		};
 	},
 	getProjectName(){
 		return {
-			projectName: "家政服务O2O平台"
+			projectName: "家政服务系统"
 		} 
 	},
 	getUsersName(){

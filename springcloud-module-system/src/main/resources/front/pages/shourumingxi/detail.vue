@@ -143,7 +143,7 @@
 			if(crossCleanType) {
 				uni.removeStorageSync('crossCleanType')
 				res = await this.$api.info('shourumingxi', this.id);
-				let reg=new RegExp('http://localhost:8080/springcloud-alibaba3krib874/upload','g')//g代表全部
+				let reg=new RegExp('http://localhost:8080/springcloud-alibaba/upload','g')//g代表全部
 				this.detail = res.data;
 				this.title = this.detail.xiangmubianhao
 			}
@@ -226,7 +226,7 @@
 					clearInterval(this.timer);
 				}
 				let res = await this.$api.info('shourumingxi', this.id);
-				let reg=new RegExp('http://localhost:8080/springcloud-alibaba3krib874/upload','g')//g代表全部
+				let reg=new RegExp('http://localhost:8080/springcloud-alibaba/upload','g')//g代表全部
 				this.detail = res.data;
 
 				this.title = this.detail.xiangmubianhao
