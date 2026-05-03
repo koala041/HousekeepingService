@@ -116,7 +116,9 @@ public class YonghuController {
                 smsValidate = true;
             }
         }
-        if(!smsValidate) return R.error("短信验证码不正确");
+        if(!smsValidate) {
+            return R.error("短信验证码不正确");
+        }
 		Long uId = new Date().getTime();
 		yonghu.setId(uId);
         //保存用户
@@ -148,7 +150,9 @@ public class YonghuController {
     @RequestMapping("/sendsms/login")
     public R sendsmsForLogin(@RequestParam String mobile){
         YonghuEntity u =yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("mobile", mobile));
-        if(u==null) return R.error("用户不存在");
+        if(u==null) {
+            return R.error("用户不存在");
+        }
         String code = CommonUtil.getRandomNumber(6);
         SmsregistercodeEntity smsregistercode = new SmsregistercodeEntity();
         smsregistercode.setCode(code);
@@ -175,7 +179,9 @@ public class YonghuController {
                 smsValidate = true;
             }
         }
-        if(!smsValidate) return R.error("短信验证码不正确");
+        if(!smsValidate) {
+            return R.error("短信验证码不正确");
+        }
         // 判断用户锁定状态
         if(u!=null && u.getStatus().intValue()==1) {
             //返回已锁定提示

@@ -252,7 +252,7 @@
 									let message = this.$message
 									message.error(data.msg);
 								}
-								this.$router.replace({ path: "/" });
+								this.$router.replace({ path: "/index" });
 							});
 						})
 					}

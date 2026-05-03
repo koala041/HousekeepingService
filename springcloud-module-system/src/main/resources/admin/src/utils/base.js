@@ -16,10 +16,10 @@ const base = {
 	},
 	get() {
 		return {
-			url : "http://localhost:8080/springcloud-alibaba/",
+			url : "/springcloud-alibaba/",
 			name: "springcloud-alibaba",
 			// 退出到首页链接
-			indexUrl: 'http://localhost:8080/springcloud-alibaba/front/h5/index.html'
+			indexUrl: '/springcloud-alibaba/front/h5/index.html'
 		};
 	},
 	getProjectName(){

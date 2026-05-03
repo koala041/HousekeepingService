@@ -151,7 +151,9 @@ public class FuwurenyuanController {
     @RequestMapping("/sendsms/login")
     public R sendsmsForLogin(@RequestParam String mobile){
         FuwurenyuanEntity u =fuwurenyuanService.selectOne(new EntityWrapper<FuwurenyuanEntity>().eq("mobile", mobile));
-        if(u==null) return R.error("用户不存在");
+        if(u==null) {
+            return R.error("用户不存在");
+        }
         String code = CommonUtil.getRandomNumber(6);
         SmsregistercodeEntity smsregistercode = new SmsregistercodeEntity();
         smsregistercode.setCode(code);
@@ -169,7 +171,9 @@ public class FuwurenyuanController {
     @RequestMapping("/sms/login")
     public R emailLogin(@RequestParam String mobile,@RequestParam(required = false) String smscode){
         FuwurenyuanEntity u =fuwurenyuanService.selectOne(new EntityWrapper<FuwurenyuanEntity>().eq("mobile", mobile));
-        if(u==null) return R.error("用户不存在");
+        if(u==null) {
+            return R.error("用户不存在");
+        }
         //判断验证码是否正确，否则返回错误信息
         List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>().eq("role", "服务人员").eq("mobile", mobile).orderBy("addtime", false));
         boolean smsValidate = false;
@@ -178,7 +182,9 @@ public class FuwurenyuanController {
                 smsValidate = true;
             }
         }
-        if(!smsValidate) return R.error("短信验证码不正确");
+        if(!smsValidate) {
+            return R.error("短信验证码不正确");
+        }
         // 判断用户锁定状态
         if(u!=null && u.getStatus().intValue()==1) {
             //返回已锁定提示

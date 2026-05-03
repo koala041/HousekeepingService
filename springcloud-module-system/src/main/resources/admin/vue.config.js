@@ -50,7 +50,8 @@ lintOnSave: false,
 			'/springcloud-alibaba': { //带上api前缀的
 				target: 'http://localhost:8080/', //代理目标地址
 				changeOrigin: true,
-				secure: false
+				secure: false,
+				pathRewrite: { '^/springcloud-alibaba': '/springcloud-alibaba' }
 			}
 		}
 	},

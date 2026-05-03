@@ -90,7 +90,7 @@ public class UsersController {
         if(u!=null) {
 			return R.error("注册用户已存在");
 		}
-		Long uId = new Date().getTime();
+		Long uId = System.currentTimeMillis();
 		users.setId(uId);
         users.setPassword(users.getPassword());
         //保存用户
@@ -263,7 +263,7 @@ public class UsersController {
         if(u!=null) {
             return R.error("用户已存在");
         }
-		users.setId(new Date().getTime());
+		users.setId(System.currentTimeMillis());
         usersService.insert(users);
         return R.ok().put("data",users.getId());
     }

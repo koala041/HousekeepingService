@@ -439,37 +439,43 @@ export default {
 			return (0.5-Math.random())
 		})
 	},
-	methods: {
-		nameChange(e,type) {
-			if(e=='订单管理') {
-				return e
-			}
-			if(type) {
-				return e + '管理'
-			}
-			return e
-		},
-		collapse() {
-		  this.isCollapse = !this.isCollapse
-		  this.$emit('oncollapsechange', this.isCollapse)
-		},
-		styleChange() {
-			this.$nextTick(() => {
-								document.querySelectorAll('.el-menu-vertical-demo .el-submenu .el-menu').forEach(el => {
-				  el.removeAttribute('style')
-				  const icon = {"border":"none","display":"none"}
-				  Object.keys(icon).forEach((key) => {
-					el.style[key] = icon[key]
-				  })
-				})
-											})
-		},
-		menuHandler(name) {
-			let router = this.$router
-			name = '/'+name
-			router.push(name)
-		},
-	}
+  methods: {
+    nameChange(e,type) {
+      if(e=='订单管理') {
+        return e
+      }
+      if(type) {
+        return e + '管理'
+      }
+      return e
+    },
+    collapse() {
+      this.isCollapse = !this.isCollapse
+      this.$emit('oncollapsechange', this.isCollapse)
+    },
+    styleChange() {
+      this.$nextTick(() => {
+        document.querySelectorAll('.el-menu-vertical-demo .el-submenu .el-menu').forEach(el => {
+          el.removeAttribute('style')
+          const icon = {"border":"none","display":"none"}
+          Object.keys(icon).forEach((key) => {
+            el.style[key] = icon[key]
+          })
+        })
+      })
+    },
+    // 菜单跳转：已同步改为 /index 前缀
+    menuHandler(name) {
+      let router = this.$router
+      // 空 = 首页 → /index
+      if (!name || name === '') {
+        router.push('/index')
+      } else {
+        // 其他菜单 → /index/xxx
+        router.push('/index/' + name)
+      }
+    },
+  }
 }
 </script>
 <style lang="scss" scoped>

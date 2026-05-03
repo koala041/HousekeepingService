@@ -14,11 +14,11 @@
 				<span class="icon iconfont icon-xiala"></span>
 			</div>
 			<el-dropdown-menu class="top-el-dropdown-menu" slot="dropdown">
-				<el-dropdown-item class="item1" :command="''">
+				<el-dropdown-item class="item1" :command="'index'">
 					<span class="icon iconfont icon-home19"></span>
 					首页
 				</el-dropdown-item>
-				<el-dropdown-item class="item2" :command="'center'">
+				<el-dropdown-item class="item2" :command="'index/center'">
 					<span class="icon iconfont icon-touxiang09"></span>
 					个人中心
 				</el-dropdown-item>
@@ -603,15 +603,19 @@
 				window.open((location.href.split(this.$base.name).length>1 ? location.href.split(this.$base.name)[0] + this.$base.name + '/' + file :this.$base.url + file))
 			},
 			async onLogout() {
-				await this.$http.post(`${this.$storage.get('sessionTable')}/logout`).then(rs=>{
-					let storage = this.$storage
-					let router = this.$router
-					storage.clear()
-					this.$store.dispatch('tagsView/delAllViews')
-					router.replace({
-						name: "login"
-					});
-				})
+				// 1. 请求后端退出接口
+				await this.$http.post(`${this.$storage.get('sessionTable')}/logout`)
+				
+				// 2. 清空本地所有登录状态（必须）
+				let storage = this.$storage
+				storage.clear()
+				localStorage.removeItem('token')
+				
+				// 3. 清空标签页
+				this.$store.dispatch('tagsView/delAllViews')
+				
+				// 4. 跳转到登录页
+				this.$router.replace({ path: "/" })
 			},
 			backUp() {
 				this.$confirm('是否备份数据库?', '数据备份提示', {

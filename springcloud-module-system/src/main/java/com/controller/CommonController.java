@@ -1,8 +1,6 @@
 package com.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +32,6 @@ import com.entity.ConfigEntity;
 import com.service.CommonService;
 import com.service.ConfigService;
 import com.utils.*;
-import java.io.ByteArrayOutputStream;
 import org.apache.commons.io.IOUtils;
 import com.llm.MultiModelAIClient;
 import org.springframework.http.MediaType;
@@ -43,6 +40,7 @@ import com.entity.ChatEntity;
 
 /**
  * 通用接口
+ * @author GG Bond
  */
 @RestController
 public class CommonController{
@@ -58,8 +56,8 @@ public class CommonController{
 	private ChatService chatService;
 	/**
 	 * 获取table表中的column列表(联动接口)
-	 * @param table
-	 * @param column
+	 * @param tableName
+	 * @param columnName
 	 * @return
 	 */
 	@IgnoreAuth
@@ -87,8 +85,8 @@ public class CommonController{
 	
 	/**
 	 * 根据table中的column获取单条记录
-	 * @param table
-	 * @param column
+	 * @param tableName
+	 * @param columnName
 	 * @return
 	 */
 	@IgnoreAuth
@@ -111,7 +109,7 @@ public class CommonController{
 	
 	/**
 	 * 修改table表的sfsh状态
-	 * @param table
+	 * @param tableName
 	 * @param map
 	 * @return
 	 */
@@ -358,31 +356,41 @@ public class CommonController{
     /**
     * MySQL数据库导出
     */
-    @RequestMapping("/mysqldump")
-    public void exportDatabaseTool(HttpServletResponse response)throws InterruptedException {
-        String fileName = "mysql.dmp";
-        try {
-            Runtime runtime = Runtime.getRuntime();
-            String path = "/usr/bin/";
-            String cmd = "mysqldump -h127.0.0.1 -uroot -P3306 -p123456 springcloud-alibaba";
-            cmd = path +"/" + cmd;
-            Process process = runtime.exec(cmd);
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024*4];
-            int n = 0;
-            while (-1 != (n = process.getInputStream().read(buffer))) {
-                output.write(buffer, 0, n);
-            }
-            response.reset();
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName+"\"");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setContentType("application/octet-stream; charset=UTF-8");
-            IOUtils.write(output.toByteArray(), response.getOutputStream());
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	@RequestMapping("/mysqldump")
+	public void exportDatabaseTool(HttpServletResponse response) {
+		try {
+			// 直接备份整个 MySQL，不需要知道库名
+			String cmd = "\"D:\\MySQL Server 8.0\\bin\\mysqldump\" -h127.0.0.1 -P3306 -uroot -plyk23430852 --all-databases";
+
+			Process process = Runtime.getRuntime().exec(cmd);
+
+			// 处理错误流，防止卡死
+			new Thread(() -> {
+				try (InputStream errorStream = process.getErrorStream()) {
+					byte[] buf = new byte[1024];
+					while (errorStream.read(buf) != -1) {}
+				} catch (IOException e) {}
+			}).start();
+
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			try (InputStream inputStream = process.getInputStream()) {
+				byte[] buffer = new byte[1024 * 4];
+				int n;
+				while ((n = inputStream.read(buffer)) != -1) {
+					output.write(buffer, 0, n);
+				}
+			}
+
+			process.waitFor();
+
+			response.reset();
+			response.setHeader("Content-Disposition", "attachment; filename=all_database_backup.sql");
+			response.setContentType("application/octet-stream; charset=UTF-8");
+			IOUtils.write(output.toByteArray(), response.getOutputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	@IgnoreAuth

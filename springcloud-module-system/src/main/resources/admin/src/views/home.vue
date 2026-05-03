@@ -114,7 +114,7 @@ export default {
   computed: {
     kpis() {
       return [
-        { key: 'user', label: '注册用户', value: this.counts.yonghu, icon: '用' },
+        { key: 'user', label: '注册用户', value: this.counts.yonghu + this.counts.fuwurenyuan, icon: '用' },
         { key: 'staff', label: '服务人员', value: this.counts.fuwurenyuan, icon: '员' },
         { key: 'service', label: '服务项目', value: this.counts.fuwuxinxi, icon: '服' },
         { key: 'reserve', label: '服务预约', value: this.counts.fuwuyuyue, icon: '约' },
@@ -157,8 +157,11 @@ export default {
     },
     async loadDashboard() {
       const keys = Object.keys(this.counts)
-      const countResults = await Promise.all(keys.map(key => this.safeGet(`${key}/count`)))
-      keys.forEach((key, index) => { this.counts[key] = Number(countResults[index] || 0) })
+      const countResults = await Promise.all(keys.map(key => this.safeGet(`${key}/list`, { page: 1, limit: 1 })))
+      keys.forEach((key, index) => { 
+        const result = countResults[index] || {}
+        this.counts[key] = Number(result.total || 0) 
+      })
       const [types, orders, income, news] = await Promise.all([
         this.safeGet('fuwuxinxi/group/fuwuleixing'),
         this.safeGet('fuwudingdan/group/fuwuzhuangtai'),
