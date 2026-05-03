@@ -62,4 +62,10 @@ public class FuwurenyuanServiceImpl extends ServiceImpl<FuwurenyuanDao, Fuwureny
 	}
 
 
+    @Override
+    public List<Map<String, Object>> selectGroup(Map<String, Object> params, Wrapper<FuwurenyuanEntity> wrapper) {
+        return baseMapper.selectGroup(params, wrapper);
+    }
+
+
 }

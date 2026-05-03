@@ -54,14 +54,20 @@
 							{{scope.row.yuangongxingming}}
 						</template>
 					</el-table-column>
-					<el-table-column  :resizable='true' prop="touxiang" width="200" label="头像">
+					<el-table-column  :resizable='true' prop="touxiang" width="100" label="头像">
 						<template slot-scope="scope">
 							<div v-if="scope.row.touxiang">
-								<img v-if="scope.row.touxiang.substring(0,4)=='http'&&scope.row.touxiang.split(',w').length>1" :src="scope.row.touxiang" width="100" height="100" style="object-fit: cover" @click="imgPreView(scope.row.touxiang)">
-								<img v-else-if="scope.row.touxiang.substring(0,4)=='http'" :src="scope.row.touxiang.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView(scope.row.touxiang.split(',')[0])">
-								<img v-else :src="$base.url+scope.row.touxiang.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView($base.url+scope.row.touxiang.split(',')[0])">
+								<div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden;">
+									<img v-if="scope.row.touxiang.substring(0,4)=='http'&&scope.row.touxiang.split(',w').length>1" :src="scope.row.touxiang" width="100%" height="100%" style="object-fit: cover;" @click="imgPreView(scope.row.touxiang)">
+									<img v-else-if="scope.row.touxiang.substring(0,4)=='http'" :src="scope.row.touxiang.split(',')[0]" width="100%" height="100%" style="object-fit: cover;" @click="imgPreView(scope.row.touxiang.split(',')[0])">
+									<img v-else :src="$base.url+scope.row.touxiang.split(',')[0]" width="100%" height="100%" style="object-fit: cover;" @click="imgPreView($base.url+scope.row.touxiang.split(',')[0])">
+								</div>
 							</div>
-							<div v-else>无图片</div>
+							<div v-else>
+								<div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden;">
+									<img :src="encodeURI('/systemPhotos/ServiceAvator.png')" width="100%" height="100%" style="object-fit: cover;">
+								</div>
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column :resizable='true' :sortable='true'
@@ -816,7 +822,7 @@
 					data:row
 				}).then(res=>{
 					if(row.status==1){
-						this.$message.error('该用户已锁定')
+						this.$message.success('该用户已成功锁定')
 					}else{
 						this.$message.success('该用户已解除锁定')
 					}

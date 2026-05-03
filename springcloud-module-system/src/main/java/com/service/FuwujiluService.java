@@ -31,6 +31,8 @@ public interface FuwujiluService extends IService<FuwujiluEntity> {
    	FuwujiluView selectView(@Param("ew") Wrapper<FuwujiluEntity> wrapper);
    	
    	PageUtils queryPage(Map<String, Object> params,Wrapper<FuwujiluEntity> wrapper);
+	
+    List<Map<String, Object>> selectGroup(Map<String, Object> params,Wrapper<FuwujiluEntity> wrapper);
 
    	
 

@@ -34,5 +34,6 @@ public interface FuwujiluDao extends BaseMapper<FuwujiluEntity> {
 	
 	FuwujiluView selectView(@Param("ew") Wrapper<FuwujiluEntity> wrapper);
 	
+    List<Map<String, Object>> selectGroup(@Param("params") Map<String, Object> params,@Param("ew") Wrapper<FuwujiluEntity> wrapper);
 
 }

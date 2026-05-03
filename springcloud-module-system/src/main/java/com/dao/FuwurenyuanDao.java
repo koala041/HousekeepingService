@@ -34,5 +34,9 @@ public interface FuwurenyuanDao extends BaseMapper<FuwurenyuanEntity> {
 	
 	FuwurenyuanView selectView(@Param("ew") Wrapper<FuwurenyuanEntity> wrapper);
 	
+	
+
+    List<Map<String, Object>> selectGroup(@Param("params") Map<String, Object> params,@Param("ew") Wrapper<FuwurenyuanEntity> wrapper);
+
 
 }

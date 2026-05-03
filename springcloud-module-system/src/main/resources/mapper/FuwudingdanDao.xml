@@ -57,6 +57,11 @@
 		SELECT * FROM fuwudingdan  fuwudingdan <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
+    <select id="selectGroup" resultType="map" >
+        SELECT ${params.column} , count(1) total FROM fuwudingdan
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.column}
+    </select>
 
 
 </mapper>

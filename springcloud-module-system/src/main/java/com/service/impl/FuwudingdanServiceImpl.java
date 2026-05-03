@@ -62,4 +62,10 @@ public class FuwudingdanServiceImpl extends ServiceImpl<FuwudingdanDao, Fuwuding
 	}
 
 
+    @Override
+    public List<Map<String, Object>> selectGroup(Map<String, Object> params, Wrapper<FuwudingdanEntity> wrapper) {
+        return baseMapper.selectGroup(params, wrapper);
+    }
+
+
 }

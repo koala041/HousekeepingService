@@ -260,7 +260,7 @@ export default {
 				})
 			}
 			
-			this.menuList = menus
+			this.menuList = this.cleanStatMenus(menus)
 		} else {
 			let params = {
 				page: 1,
@@ -395,7 +395,7 @@ export default {
 							}
 						})
 					}
-					this.menuList = menus;
+					this.menuList = this.cleanStatMenus(menus);
 					this.$storage.set("menus", this.menuList);
 				}
 			})
@@ -440,6 +440,20 @@ export default {
 		})
 	},
   methods: {
+    cleanStatMenus(menus) {
+      return (menus || []).map(roleMenu => {
+        if (!roleMenu.backMenu) return roleMenu
+        roleMenu.backMenu = roleMenu.backMenu
+          .filter(item => item.menu !== '统计管理')
+          .map(item => {
+            if (item.child) {
+              item.child = item.child.filter(child => !['fuwuxinxistat', 'fuwuyuyuestat', 'shourumingxistat'].includes(child.tableName))
+            }
+            return item
+          })
+        return roleMenu
+      })
+    },
     nameChange(e,type) {
       if(e=='订单管理') {
         return e

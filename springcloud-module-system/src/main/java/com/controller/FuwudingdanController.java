@@ -310,9 +310,54 @@ public class FuwudingdanController {
         return R.ok(res);
 	}
 
+    /**
+     * 分组统计
+     */
+    @RequestMapping("/group/{columnName}")
+    public R group(@PathVariable("columnName") String columnName, @RequestParam(required = false) String conditionColumn, @RequestParam(required = false) String conditionValue, HttpServletRequest request) throws IOException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("column", columnName);
+        EntityWrapper<FuwudingdanEntity> ew = new EntityWrapper<FuwudingdanEntity>();
+        if(StringUtils.isNotBlank(conditionColumn)&&StringUtils.isNotBlank(conditionValue))
+        {
+            String[] conditionColumns = conditionColumn.split(";");
+            String[] conditionValues = conditionValue.split(";");
 
+            for (int i = 0; i < conditionColumns.length; i++) {
+                String column = conditionColumns[i];
+                String value = conditionValues[i];
 
+                if (column.contains(",")) {
+                    String[] rangeColumns = column.split(",");
+                    String[] rangeValues = value.split(",");
 
+                    if (rangeColumns.length == 2 && rangeValues.length == 2) {
+                        ew.ge(rangeColumns[0], rangeValues[0]);
+                        ew.le(rangeColumns[1], rangeValues[1]);
+                    }
+                } else {
+                    ew.eq(column, value);
+                }
+            }
+        }
+        String tableName = request.getSession().getAttribute("tableName").toString();
+        if(tableName.equals("yonghu")) {
+            ew.eq("yonghuzhanghao", (String)request.getSession().getAttribute("username"));
+        }
+        if(tableName.equals("fuwurenyuan")) {
+            ew.eq("yuangongzhanghao", (String)request.getSession().getAttribute("username"));
+        }
+        List<Map<String, Object>> result = fuwudingdanService.selectGroup(params, ew);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for(Map<String, Object> m : result) {
+            for(String k : m.keySet()) {
+                if(m.get(k) instanceof Date) {
+                    m.put(k, sdf.format((Date)m.get(k)));
+                }
+            }
+        }
+        return R.ok().put("data", result);
+    }
 
 
 }

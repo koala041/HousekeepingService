@@ -34,5 +34,8 @@ public interface YonghuService extends IService<YonghuEntity> {
 
    	
 
+    List<Map<String, Object>> selectGroup(Map<String, Object> params,Wrapper<YonghuEntity> wrapper);
+
+
 }
 

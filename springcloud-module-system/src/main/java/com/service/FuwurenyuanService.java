@@ -34,5 +34,8 @@ public interface FuwurenyuanService extends IService<FuwurenyuanEntity> {
 
    	
 
+    List<Map<String, Object>> selectGroup(Map<String, Object> params,Wrapper<FuwurenyuanEntity> wrapper);
+
+
 }
 

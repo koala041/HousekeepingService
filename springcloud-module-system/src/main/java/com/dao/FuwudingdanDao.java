@@ -34,5 +34,9 @@ public interface FuwudingdanDao extends BaseMapper<FuwudingdanEntity> {
 	
 	FuwudingdanView selectView(@Param("ew") Wrapper<FuwudingdanEntity> wrapper);
 	
+	
+
+    List<Map<String, Object>> selectGroup(@Param("params") Map<String, Object> params,@Param("ew") Wrapper<FuwudingdanEntity> wrapper);
+
 
 }

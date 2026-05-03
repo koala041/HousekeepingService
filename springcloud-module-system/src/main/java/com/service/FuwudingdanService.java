@@ -34,5 +34,8 @@ public interface FuwudingdanService extends IService<FuwudingdanEntity> {
 
    	
 
+    List<Map<String, Object>> selectGroup(Map<String, Object> params,Wrapper<FuwudingdanEntity> wrapper);
+
+
 }
 

@@ -62,4 +62,10 @@ public class YonghuServiceImpl extends ServiceImpl<YonghuDao, YonghuEntity> impl
 	}
 
 
+    @Override
+    public List<Map<String, Object>> selectGroup(Map<String, Object> params, Wrapper<YonghuEntity> wrapper) {
+        return baseMapper.selectGroup(params, wrapper);
+    }
+
+
 }

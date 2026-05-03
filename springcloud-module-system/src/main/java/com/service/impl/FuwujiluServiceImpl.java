@@ -61,5 +61,10 @@ public class FuwujiluServiceImpl extends ServiceImpl<FuwujiluDao, FuwujiluEntity
 		return baseMapper.selectView(wrapper);
 	}
 
+    @Override
+    public List<Map<String, Object>> selectGroup(Map<String, Object> params, Wrapper<FuwujiluEntity> wrapper) {
+        return baseMapper.selectGroup(params, wrapper);
+    }
+
 
 }
