@@ -92,7 +92,7 @@
 				],
 				phonerolesIndex: 0,
 				// 倒计时时间
-				count: 60,
+				count: 300,
 				// 倒计时定时器
 				inter: null,
 				// 倒计时是否结束
@@ -145,11 +145,10 @@
 				})
 			},
 			emailText: function() {
-				var time = this.count;
-				if (null != time && "" != time) {
-					time = parseInt(time) + "秒后重发";
-				}
-				return time;
+				let time = parseInt(this.count || 0)
+				let minute = Math.floor(time / 60)
+				let second = time % 60
+				return `${minute}:${second < 10 ? '0' + second : second}后重发`
 			}
 		},
 		onLoad() {
@@ -212,10 +211,15 @@
 						if (_this.count <= 0) {
 							clearInterval(_this.inter);
 							_this.isEndFlag = true;
-							_this.count=60;
+							_this.count=300;
 						}
 					}, 1000);
-					this.$utils.msg("发送成功！");
+					if(res.mock) {
+						this.phonecode = res.data
+						this.$utils.msg(`短信服务未配置，已使用本地验证码：${res.data}`);
+					} else {
+						this.$utils.msg("发送成功！");
+					}
 				}else {
 					this.$utils.msg(res.msg);
 				}

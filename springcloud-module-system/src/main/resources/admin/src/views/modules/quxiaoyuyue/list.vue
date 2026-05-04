@@ -53,6 +53,10 @@
 						<span class="icon iconfont icon-zhifudingjin" :style='{"margin":"0 2px","fontSize":"16px","color":"inherit","display":"none","height":"40px"}'></span>
 						批量支付
 					</el-button>
+					<el-button class="edit" v-if="isAuth('quxiaoyuyue','修改')" :disabled="dataListSelections.length!==1" type="primary" @click="addOrUpdateHandler(dataListSelections[0].id)">
+						<span class="icon iconfont icon-xiugai13" :style='{"margin":"0 2px","fontSize":"16px","color":"inherit","display":"none","height":"40px"}'></span>
+						编辑
+					</el-button>
 				</el-row>
 			</el-form>
 			<div :style='{"width":"100%","padding":"10px 0px 20px","boxShadow":"none","borderRadius":"0 0 4px 4px","background":"#fff"}'>
@@ -186,10 +190,7 @@
 								<span class="icon iconfont icon-chakan2" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
 								查看
 							</el-button>
-							<el-button class="edit" v-if=" isAuth('quxiaoyuyue','修改')  && scope.row.sfsh=='待审核' " type="success" @click="addOrUpdateHandler(scope.row.id)">
-								<span class="icon iconfont icon-xiugai13" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
-								编辑
-							</el-button>
+
 
 
 
@@ -679,6 +680,32 @@
 	
 	.center-form-pv .actions .del:hover {
 		opacity: 0.8;
+	}
+
+	.center-form-pv .actions .edit {
+		border: 0px solid #d1d5db;
+		cursor: pointer;
+		border-radius: 4px;
+		padding: 0 10px;
+		margin: 4px 8px 4px 0;
+		outline: none;
+		color: #fff;
+		background: #409eff;
+		width: auto;
+		font-size: inherit;
+		min-width: 60px;
+		height: 36px;
+	}
+
+	.center-form-pv .actions .edit:hover:not(:disabled) {
+		opacity: 0.8;
+	}
+
+	.center-form-pv .actions .edit:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+		background: #ccc;
+		border-color: #ccc;
 	}
 	
 	.center-form-pv .actions .statis {

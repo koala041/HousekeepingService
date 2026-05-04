@@ -29,6 +29,10 @@
 						<span class="icon iconfont icon-tianjia1" :style='{"margin":"0 2px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
 						新增
 					</el-button>
+					<el-button class="edit" v-if="isAuth('fuwuxinxi','修改')" :disabled="dataListSelections.length!==1" type="primary" @click="addOrUpdateHandler(dataListSelections[0].id)">
+						<span class="icon iconfont icon-xiugai13" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
+						编辑
+					</el-button>
 					<el-button class="del" v-if="isAuth('fuwuxinxi','删除')" :disabled="dataListSelections.length?false:true" type="danger" @click="deleteHandler()">
 						<span class="icon iconfont icon-shanchu6" :style='{"margin":"0 2px","fontSize":"16px","color":"inherit","display":"none","height":"40px"}'></span>
 						批量删除
@@ -69,7 +73,9 @@
 								<img v-else-if="scope.row.xiangmutupian.substring(0,4)=='http'" :src="scope.row.xiangmutupian.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView(scope.row.xiangmutupian.split(',')[0])">
 								<img v-else :src="$base.url+scope.row.xiangmutupian.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView($base.url+scope.row.xiangmutupian.split(',')[0])">
 							</div>
-							<div v-else>无图片</div>
+							<div v-else>
+								<img :src="getDefaultImage(scope.row.id)" width="100" height="100" style="object-fit: cover">
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column :resizable='true' :sortable='true'
@@ -171,18 +177,14 @@
 								查看
 							</el-button>
 							<el-button class="btn8" v-if="isAuth('fuwuxinxi','立即预约')" @click="fuwuyuyueCrossAddOrUpdateHandler(scope.row,'cross','','','','')" type="success">
-								<span class="icon iconfont icon-xihuan" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
-								立即预约
-							</el-button>
-							<el-button class="edit" v-if=" isAuth('fuwuxinxi','修改') " type="success" @click="addOrUpdateHandler(scope.row.id)">
-								<span class="icon iconfont icon-xiugai13" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
-								编辑
-							</el-button>
+					<span class="icon iconfont icon-xihuan" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
+					立即预约
+				</el-button>
 
-							<el-button class="view" v-if="isAuth('fuwuxinxi','查看评论')" type="success" @click="disscussListHandler(scope.row.id)">
-								<span class="icon iconfont icon-chakan2" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
-								查看评论
-							</el-button>
+				<el-button class="view" v-if="isAuth('fuwuxinxi','查看评论')" type="success" @click="disscussListHandler(scope.row.id)">
+					<span class="icon iconfont icon-chakan2" :style='{"margin":"0 0px","fontSize":"14px","color":"inherit","display":"none","height":"40px"}'></span>
+					查看评论
+				</el-button>
 
 
 
@@ -369,6 +371,10 @@
 				this.previewImg = url
 				this.previewVisible = true
 				
+			},
+			getDefaultImage(id){
+				const random = (id * 9973) % 22 + 1
+				return `/systemPhotos/default/default${random}.jpg`
 			},
 			fuwuyuyueCrossAddOrUpdateHandler(row,type,crossOptAudit,crossOptPay,statusColumnName,tips,statusColumnValue){
 				this.showFlag = false;
@@ -838,7 +844,7 @@
 			},
 			// 查看评论
 			disscussListHandler(id,type) {
-				this.$router.push({path:'/discussfuwuxinxi',query:{refid:id}});
+				this.$router.push({path:'/index/discussfuwuxinxi',query:{refid:id}});
 			},
 			onshelvesChange(e,row){
 				this.$http({
@@ -1013,6 +1019,32 @@
 	
 	.center-form-pv .actions .del:hover {
 		opacity: 0.8;
+	}
+
+	.center-form-pv .actions .edit {
+		border: 0px solid #d1d5db;
+		cursor: pointer;
+		border-radius: 4px;
+		padding: 0 10px;
+		margin: 4px 8px 4px 0;
+		outline: none;
+		color: #fff;
+		background: #409eff;
+		width: auto;
+		font-size: inherit;
+		min-width: 60px;
+		height: 36px;
+	}
+
+	.center-form-pv .actions .edit:hover:not(:disabled) {
+		opacity: 0.8;
+	}
+
+	.center-form-pv .actions .edit:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+		background: #ccc;
+		border-color: #ccc;
 	}
 	
 	.center-form-pv .actions .statis {

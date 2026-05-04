@@ -41,8 +41,8 @@
 				<!-- 样式3 -->
 				<view class="list-box style3" :style='{"padding":"0","margin":"0","flexWrap":"wrap","display":"flex","width":"100%","justifyContent":"space-between","height":"auto"}'>
 					<view @tap="onDetailTap('fuwuxinxi',product.id)" v-for="(product,index) in fuwuxinxilist" :key="index" class="list-item" :style='{"padding":"0 0 20rpx 0","boxShadow":"0 2rpx 12rpx #cccccc","margin":"0 0 30rpx 0","borderColor":"#dddddd","borderRadius":"12rpx","flexWrap":"wrap","borderWidth":"0 0 0px 0","display":"flex","width":"48%","borderStyle":"solid","height":"auto"}'>
-						<image :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' class="list-item-image" mode="aspectFill" v-if="product.xiangmutupian.substring(0,4)=='http'" :src="product.xiangmutupian"></image>
-						<image :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' class="list-item-image" mode="aspectFill" v-else :src="product.xiangmutupian?baseUrl+product.xiangmutupian.split(',')[0]:''"></image>
+						<image :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' class="list-item-image" mode="aspectFill" v-if="product.xiangmutupian && product.xiangmutupian.substring(0,4)=='http'" :src="product.xiangmutupian"></image>
+						<image :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' class="list-item-image" mode="aspectFill" v-else :src="product.xiangmutupian?baseUrl+product.xiangmutupian.split(',')[0]:getDefaultImage(product.id)"></image>
 						<view class="list-item-body" :style='{"width":"100%","padding":"0 12rpx 0 12rpx","margin":"0","height":"auto"}'>
 							<view :style='{"padding":"4rpx 0 4rpx 0","overflow":"hidden","whiteSpace":"nowrap","color":"#333","width":"100%","lineHeight":"48rpx","fontSize":"28rpx","textOverflow":"ellipsis","fontWeight":"600"}' class="list-item-title">{{product.xiangmubianhao}}</view>
 							<view :style='{"padding":"4rpx 0 4rpx 0","overflow":"hidden","whiteSpace":"nowrap","color":"#333","width":"100%","lineHeight":"48rpx","fontSize":"28rpx","textOverflow":"ellipsis","fontWeight":"600"}' class="list-item-title">项目名称:{{product.xiangmumingcheng}}</view>
@@ -251,7 +251,11 @@
 			this.getNewsList()
 		},
 		methods: {
-			scrollTopClick(){
+				getDefaultImage(id){
+					const random = (id * 9973) % 22 + 1
+					return `/static/default/default${random}.jpg`
+				},
+				scrollTopClick(){
 				uni.pageScrollTo({
 					scrollTop: 0
 				})

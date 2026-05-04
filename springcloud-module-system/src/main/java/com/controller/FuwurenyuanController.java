@@ -42,24 +42,19 @@ import com.utils.RedisUtils;
 /**
  * 服务人员
  * 后端接口
- * @author 
- * @email 
+ * @author GG Bond
  * @date 2026-04-28 09:32:57
  */
 @RestController
 @RequestMapping("/fuwurenyuan")
 public class FuwurenyuanController {
+    private static final long SMS_EXPIRE_MILLIS = 5 * 60 * 1000L;
     @Autowired
     private FuwurenyuanService fuwurenyuanService;
     @Autowired
     private RedisUtils redisUtils;
     @Autowired
     private SmsregistercodeService smsregistercodeService;
-
-
-
-
-    
 	@Autowired
 	private TokenService tokenService;
 
@@ -87,8 +82,6 @@ public class FuwurenyuanController {
         //返回token
 		return R.ok().put("token", token);
 	}
-
-
 	
 	/**
      * 注册
@@ -111,15 +104,10 @@ public class FuwurenyuanController {
         if(u!=null) {
             return R.error("手机已被注册");
         }
-        //判断验证码是否正确，否则返回错误信息
-        List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>().eq("role", "服务人员").eq("mobile", fuwurenyuan.getMobile()).orderBy("addtime", false));
-        boolean smsValidate = false;
-        if(smsregistercodeList!=null && smsregistercodeList.size()>0) {
-            if(smsregistercodeList.get(0).getCode().equals(smscode)) {
-                smsValidate = true;
-            }
+        R smsCheck = checkSmsCode("服务人员", fuwurenyuan.getMobile(), smscode);
+        if(Integer.valueOf(smsCheck.get("code").toString())!=0) {
+            return smsCheck;
         }
-        if(!smsValidate) return R.error("短信验证码不正确");
 		Long uId = new Date().getTime();
 		fuwurenyuan.setId(uId);
         //保存用户
@@ -139,9 +127,11 @@ public class FuwurenyuanController {
         smsregistercode.setCode(code);
         smsregistercode.setRole("服务人员");
         smsregistercode.setMobile(mobile);
+        smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        CommonUtil.sendSMS(mobile, code);
-        return R.ok().put("data", code);
+        boolean sent = CommonUtil.sendSMS(mobile, code);
+        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
+                .put("data", code).put("mock", !sent);
     }
 
     /**
@@ -159,9 +149,11 @@ public class FuwurenyuanController {
         smsregistercode.setCode(code);
         smsregistercode.setRole("服务人员");
         smsregistercode.setMobile(mobile);
+        smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        CommonUtil.sendSMS(mobile, code);
-        return R.ok().put("data", code);
+        boolean sent = CommonUtil.sendSMS(mobile, code);
+        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
+                .put("data", code).put("mock", !sent);
     }
 
     /**
@@ -174,16 +166,9 @@ public class FuwurenyuanController {
         if(u==null) {
             return R.error("用户不存在");
         }
-        //判断验证码是否正确，否则返回错误信息
-        List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>().eq("role", "服务人员").eq("mobile", mobile).orderBy("addtime", false));
-        boolean smsValidate = false;
-        if(smsregistercodeList!=null && smsregistercodeList.size()>0) {
-            if(smsregistercodeList.get(0).getCode().equals(smscode)) {
-                smsValidate = true;
-            }
-        }
-        if(!smsValidate) {
-            return R.error("短信验证码不正确");
+        R smsCheck = checkSmsCode("服务人员", mobile, smscode);
+        if(Integer.valueOf(smsCheck.get("code").toString())!=0) {
+            return smsCheck;
         }
         // 判断用户锁定状态
         if(u!=null && u.getStatus().intValue()==1) {
@@ -196,6 +181,24 @@ public class FuwurenyuanController {
         redisUtils.set("fuwurenyuan"+mobile, token, 3600);
         //返回token
         return R.ok().put("token", token).put("username", u.getYuangongzhanghao());
+    }
+
+    private R checkSmsCode(String role, String mobile, String smscode) {
+        if(StringUtils.isBlank(smscode)) return R.error("请输入短信验证码");
+        List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>()
+                .eq("role", role).eq("mobile", mobile).orderBy("addtime", false));
+        if(smsregistercodeList==null || smsregistercodeList.size()==0) {
+            return R.error("请先获取短信验证码");
+        }
+        SmsregistercodeEntity latest = smsregistercodeList.get(0);
+        Date addtime = latest.getAddtime();
+        if(addtime==null || new Date().getTime() - addtime.getTime() > SMS_EXPIRE_MILLIS) {
+            return R.error("短信验证码已失效，请重新获取");
+        }
+        if(!latest.getCode().equals(smscode)) {
+            return R.error("短信验证码不正确");
+        }
+        return R.ok();
     }
 	/**
 	 * 退出
@@ -250,7 +253,6 @@ public class FuwurenyuanController {
     }
 
 
-
     /**
      * 后台列表
      */
@@ -269,7 +271,6 @@ public class FuwurenyuanController {
         return R.ok().put("data", page);
     }
 
-
     /**
      * 前台列表
      */
@@ -283,10 +284,18 @@ public class FuwurenyuanController {
 		HttpServletRequest request){
         //设置查询条件
         EntityWrapper<FuwurenyuanEntity> ew = new EntityWrapper<FuwurenyuanEntity>();
-        if(shouyistart!=null) ew.ge("shouyi", shouyistart);
-        if(shouyiend!=null) ew.le("shouyi", shouyiend);
-        if(statusstart!=null) ew.ge("status", statusstart);
-        if(statusend!=null) ew.le("status", statusend);
+        if(shouyistart!=null) {
+            ew.ge("shouyi", shouyistart);
+        }
+        if(shouyiend!=null) {
+            ew.le("shouyi", shouyiend);
+        }
+        if(statusstart!=null) {
+            ew.ge("status", statusstart);
+        }
+        if(statusend!=null) {
+            ew.le("status", statusend);
+        }
 
         //查询结果
 		PageUtils page = fuwurenyuanService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, fuwurenyuan), params), params));
@@ -342,9 +351,6 @@ public class FuwurenyuanController {
         DeSensUtil.desensitize(fuwurenyuan,deSens);
         return R.ok().put("data", fuwurenyuan);
     }
-    
-
-
 
     /**
      * 后台保存
@@ -362,7 +368,7 @@ public class FuwurenyuanController {
         if(u!=null) {
             return R.error("用户已存在");
         }
-    	fuwurenyuan.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
+    	fuwurenyuan.setId(System.currentTimeMillis()+new Double(Math.floor(Math.random()*1000)).longValue());
 		fuwurenyuan.setId(new Date().getTime());
         fuwurenyuanService.insert(fuwurenyuan);
         return R.ok().put("data",fuwurenyuan.getId());
@@ -390,10 +396,6 @@ public class FuwurenyuanController {
         return R.ok().put("data",fuwurenyuan.getId());
     }
 
-
-
-
-
     /**
      * 修改
      */
@@ -417,10 +419,6 @@ public class FuwurenyuanController {
         return R.ok();
     }
 
-
-
-    
-
     /**
      * 删除
      */
@@ -431,6 +429,18 @@ public class FuwurenyuanController {
         return R.ok();
     }
     
+    /**
+     * 总数量
+     */
+	@IgnoreAuth
+    @RequestMapping("/count")
+    public R count(@RequestParam Map<String, Object> params,FuwurenyuanEntity fuwurenyuan, HttpServletRequest request){
+        EntityWrapper<FuwurenyuanEntity> ew = new EntityWrapper<FuwurenyuanEntity>();
+        int count = fuwurenyuanService.selectCount(MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, fuwurenyuan), params), params));
+        return R.ok().put("data", count);
+    }
+
+
     /**
      * 分组统计
      */
@@ -472,6 +482,5 @@ public class FuwurenyuanController {
         }
         return R.ok().put("data", result);
     }
-
 
 }

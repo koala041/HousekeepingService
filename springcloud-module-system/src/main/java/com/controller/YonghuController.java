@@ -49,6 +49,7 @@ import com.utils.RedisUtils;
 @RestController
 @RequestMapping("/yonghu")
 public class YonghuController {
+    private static final long SMS_EXPIRE_MILLIS = 5 * 60 * 1000L;
     @Autowired
     private YonghuService yonghuService;
     @Autowired
@@ -109,16 +110,8 @@ public class YonghuController {
             return R.error("手机已被注册");
         }
         //判断验证码是否正确，否则返回错误信息
-        List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>().eq("role", "用户").eq("mobile", yonghu.getMobile()).orderBy("addtime", false));
-        boolean smsValidate = false;
-        if(smsregistercodeList!=null && smsregistercodeList.size()>0) {
-            if(smsregistercodeList.get(0).getCode().equals(smscode)) {
-                smsValidate = true;
-            }
-        }
-        if(!smsValidate) {
-            return R.error("短信验证码不正确");
-        }
+        R smsCheck = checkSmsCode("用户", yonghu.getMobile(), smscode);
+        if(Integer.valueOf(smsCheck.get("code").toString())!=0) return smsCheck;
 		Long uId = new Date().getTime();
 		yonghu.setId(uId);
         //保存用户
@@ -138,9 +131,11 @@ public class YonghuController {
         smsregistercode.setCode(code);
         smsregistercode.setRole("用户");
         smsregistercode.setMobile(mobile);
+        smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        CommonUtil.sendSMS(mobile, code);
-        return R.ok().put("data", code);
+        boolean sent = CommonUtil.sendSMS(mobile, code);
+        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
+                .put("data", code).put("mock", !sent);
     }
 
     /**
@@ -158,9 +153,11 @@ public class YonghuController {
         smsregistercode.setCode(code);
         smsregistercode.setRole("用户");
         smsregistercode.setMobile(mobile);
+        smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        CommonUtil.sendSMS(mobile, code);
-        return R.ok().put("data", code);
+        boolean sent = CommonUtil.sendSMS(mobile, code);
+        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
+                .put("data", code).put("mock", !sent);
     }
 
     /**
@@ -171,17 +168,8 @@ public class YonghuController {
     public R emailLogin(@RequestParam String mobile,@RequestParam(required = false) String smscode){
         YonghuEntity u =yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("mobile", mobile));
         if(u==null) return R.error("用户不存在");
-        //判断验证码是否正确，否则返回错误信息
-        List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>().eq("role", "用户").eq("mobile", mobile).orderBy("addtime", false));
-        boolean smsValidate = false;
-        if(smsregistercodeList!=null && smsregistercodeList.size()>0) {
-            if(smsregistercodeList.get(0).getCode().equals(smscode)) {
-                smsValidate = true;
-            }
-        }
-        if(!smsValidate) {
-            return R.error("短信验证码不正确");
-        }
+        R smsCheck = checkSmsCode("用户", mobile, smscode);
+        if(Integer.valueOf(smsCheck.get("code").toString())!=0) return smsCheck;
         // 判断用户锁定状态
         if(u!=null && u.getStatus().intValue()==1) {
             //返回已锁定提示
@@ -193,6 +181,18 @@ public class YonghuController {
         redisUtils.set("yonghu"+mobile, token, 3600);
         //返回token
         return R.ok().put("token", token).put("username", u.getYonghuzhanghao());
+    }
+
+    private R checkSmsCode(String role, String mobile, String smscode) {
+        if(StringUtils.isBlank(smscode)) return R.error("请输入短信验证码");
+        List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>()
+                .eq("role", role).eq("mobile", mobile).orderBy("addtime", false));
+        if(smsregistercodeList==null || smsregistercodeList.size()==0) return R.error("请先获取短信验证码");
+        SmsregistercodeEntity latest = smsregistercodeList.get(0);
+        Date addtime = latest.getAddtime();
+        if(addtime==null || new Date().getTime() - addtime.getTime() > SMS_EXPIRE_MILLIS) return R.error("短信验证码已失效，请重新获取");
+        if(!latest.getCode().equals(smscode)) return R.error("短信验证码不正确");
+        return R.ok();
     }
 	/**
 	 * 退出

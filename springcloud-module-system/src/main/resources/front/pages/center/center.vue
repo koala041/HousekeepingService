@@ -118,7 +118,8 @@
 				<view :style='{"padding":"0","flexWrap":"wrap","background":"#fff","display":"flex","width":"100%","justifyContent":"space-between","height":"auto"}'>
 					<view v-for="(item,index) in recommendList" :key="index" :style='{"width":"100%","margin":"20rpx 0 0 0","background":"#fff","height":"auto"}' @click="recommendDetail(item.id)">
 						<image v-if="preHttp(item[recommendPicture])" :style='{"width":"30%","objectFit":"cover","borderRadius":"12rpx","float":"left","display":"block","height":"200rpx"}' :src="item[recommendPicture]"></image>
-						<image v-else :style='{"width":"30%","objectFit":"cover","borderRadius":"12rpx","float":"left","display":"block","height":"200rpx"}' :src="item[recommendPicture]?(baseUrl + item[recommendPicture].split(',')[0]):''"></image>
+						<image v-else-if="item[recommendPicture]" :style='{"width":"30%","objectFit":"cover","borderRadius":"12rpx","float":"left","display":"block","height":"200rpx"}' :src="baseUrl + item[recommendPicture].split(',')[0]"></image>
+						<image v-else :style='{"width":"30%","objectFit":"cover","borderRadius":"12rpx","float":"left","display":"block","height":"200rpx"}' :src="getDefaultImage(item.id)"></image>
 						<view :style='{"padding":"0","margin":"0","overflow":"hidden","whiteSpace":"nowrap","color":"#333","width":"66%","lineHeight":"48rpx","fontSize":"28rpx","textOverflow":"ellipsis","float":"right","fontWeight":"500"}'>{{item[recommendTitle]}}</view>
 						<view :style='{"padding":"0","color":"#999","textAlign":"right","width":"66%","lineHeight":"24rpx","fontSize":"24rpx","float":"right"}'>{{item.addtime}}</view>
 					</view>
@@ -434,6 +435,10 @@
 			preHttp(str) {
 			    return str && str.substr(0,4)=='http';
 			},
+			getDefaultImage(id){
+				const random = (id * 9973) % 22 + 1
+				return `/static/default/default${random}.jpg`
+			},
 			async getRecommendList(){
 				let params = {
 					page: 1,
@@ -447,7 +452,7 @@
 				}
 				this.recommendList = res.data.list
 				this.recommendTable = 'fuwuxinxi'
-				this.recommendTitle = 'xiangmubianhao'
+				this.recommendTitle = 'xiangmumingcheng'
 				this.recommendPicture = 'xiangmutupian'
 				this.$forceUpdate()
 			},

@@ -143,7 +143,9 @@
 								<img v-else-if="scope.row.fuwutupian.substring(0,4)=='http'" :src="scope.row.fuwutupian.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView(scope.row.fuwutupian.split(',')[0])">
 								<img v-else :src="$base.url+scope.row.fuwutupian.split(',')[0]" width="100" height="100" style="object-fit: cover" @click="imgPreView($base.url+scope.row.fuwutupian.split(',')[0])">
 							</div>
-							<div v-else>无图片</div>
+							<div v-else>
+								<img :src="getDefaultImage(scope.row.id)" width="100" height="100" style="object-fit: cover">
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column width="300" label="操作">
@@ -274,6 +276,10 @@
 				this.previewImg = url
 				this.previewVisible = true
 				
+			},
+			getDefaultImage(id){
+				const random = (id * 9973) % 22 + 1
+				return `/systemPhotos/default/default${random}.jpg`
 			},
 			fuwuquerenCrossAddOrUpdateHandler(row,type,crossOptAudit,crossOptPay,statusColumnName,tips,statusColumnValue){
 				this.showFlag = false;

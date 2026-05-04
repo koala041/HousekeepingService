@@ -248,6 +248,13 @@ export const recommend2 = (tableName,data) => {
 		data
 	});
 }
+export const typeCounts = (tableName,data) => {
+	return http.request({
+		url: `${tableName}/typeCounts`,
+		method: 'GET',
+		data
+	});
+}
 /**
  * 上传
  */
@@ -504,6 +511,7 @@ export default {
 	info, // 单条信息查询,
 	recommend, // 智能推荐
 	recommend2, // 智能推荐(按购买类型推荐)
+	typeCounts, // 分类数量统计
 	defaultAddress, // 默认地址
 	save, // 保存
 	upload, // 上传

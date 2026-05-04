@@ -1,549 +1,114 @@
 {
-	"pages": [ {
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "首页"
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/forget/forget",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "忘记密码"
+			}
+		},
+		{
+			"path": "pages/center/center",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/user-info/user-info",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "用户信息"
+			}
+		},
+		{
+			"path": "pages/chat/chat",
+			"style": {
+				"navigationBarTitleText": "在线客服"
+			}
+		},
+		{
+			"path": "pages/news-detail/news-detail",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "通知公告详情"
+			}
+		},
+		{
+			"path": "pages/fuwuxinxi/list",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "服务信息"
+			}
+		},
+		{
+			"path": "pages/fuwuxinxi/add-or-update",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "服务信息"
+			}
+		},
+		{
+			"path": "pages/fuwuxinxi/detail",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "服务信息"
+			}
+		},
+		{
+			"path": "pages/news/list",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "通知公告"
+			}
+		},
+		{
+			"path": "pages/news/add-or-update",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "通知公告"
+			}
+		},
+		{
+			"path": "common/linkOthers/linkOthers",
+			"style": {
+				"navigationBarBackgroundColor": "#ff6f9f",
+				"navigationBarTextStyle": "white"
+			}
 		}
-	},{
-		"path": "pages/login/login",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "登录"
-		}
-	}, {
-		"path": "pages/register/register",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "注册"
-		}
-	}, {
-		"path": "pages/forget/forget",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "忘记密码"
-		}
-	}, {
-		"path": "pages/center/center",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "我的"
-		}
-	}, {
-		"path": "pages/user-info/user-info",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "用户信息"
-		}
-	}
-	, {
-		"path": "pages/chat/chat",
-		"style": {
-			"navigationBarTitleText": "在线客服"
-		}
-	}
-	, {
-		"path": "pages/news-detail/news-detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "通知公告详情"
-		}
-	}
-	,{
-		"path": "pages/yonghu/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "用户"
-		}
-	},{
-		"path": "pages/yonghu/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "用户"
-		}
-	}
-	,{
-		"path": "pages/yonghu/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "用户"
-		}
-	}
-	,{
-		"path": "pages/fuwurenyuan/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务人员"
-		}
-	},{
-		"path": "pages/fuwurenyuan/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务人员"
-		}
-	}
-	,{
-		"path": "pages/fuwurenyuan/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务人员"
-		}
-	}
-	,{
-		"path": "pages/fuwuleixing/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务类型"
-		}
-	},{
-		"path": "pages/fuwuleixing/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务类型"
-		}
-	}
-	,{
-		"path": "pages/fuwuleixing/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务类型"
-		}
-	}
-	,{
-		"path": "pages/fuwuxinxi/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务信息"
-		}
-	},{
-		"path": "pages/fuwuxinxi/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务信息"
-		}
-	}
-	,{
-		"path": "pages/fuwuxinxi/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务信息"
-		}
-	}
-	,{
-		"path": "pages/fuwuyuyue/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务预约"
-		}
-	},{
-		"path": "pages/fuwuyuyue/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务预约"
-		}
-	}
-	,{
-		"path": "pages/fuwuyuyue/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务预约"
-		}
-	}
-	,{
-		"path": "pages/quxiaoyuyue/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "取消预约"
-		}
-	},{
-		"path": "pages/quxiaoyuyue/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "取消预约"
-		}
-	}
-	,{
-		"path": "pages/quxiaoyuyue/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "取消预约"
-		}
-	}
-	,{
-		"path": "pages/fuwudingdan/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务订单"
-		}
-	},{
-		"path": "pages/fuwudingdan/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务订单"
-		}
-	}
-	,{
-		"path": "pages/fuwudingdan/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务订单"
-		}
-	}
-	,{
-		"path": "pages/fuwujilu/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务记录"
-		}
-	},{
-		"path": "pages/fuwujilu/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务记录"
-		}
-	}
-	,{
-		"path": "pages/fuwujilu/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务记录"
-		}
-	}
-	,{
-		"path": "pages/fuwuqueren/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务确认"
-		}
-	},{
-		"path": "pages/fuwuqueren/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务确认"
-		}
-	}
-	,{
-		"path": "pages/fuwuqueren/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务确认"
-		}
-	}
-	,{
-		"path": "pages/caiwujiesuan/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "财务结算"
-		}
-	},{
-		"path": "pages/caiwujiesuan/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "财务结算"
-		}
-	}
-	,{
-		"path": "pages/caiwujiesuan/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "财务结算"
-		}
-	}
-	,{
-		"path": "pages/shourumingxi/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "收入明细"
-		}
-	},{
-		"path": "pages/shourumingxi/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "收入明细"
-		}
-	}
-	,{
-		"path": "pages/shourumingxi/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "收入明细"
-		}
-	}
-	,{
-		"path": "pages/news/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "通知公告"
-		}
-	},{
-		"path": "pages/news/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "通知公告"
-		}
-	}
-	,{
-		"path": "pages/chatmessage/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "消息表"
-		}
-	},{
-		"path": "pages/chatmessage/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "消息表"
-		}
-	}
-	,{
-		"path": "pages/chatmessage/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "消息表"
-		}
-	}
-	,{
-		"path": "pages/friend/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "好友表"
-		}
-	},{
-		"path": "pages/friend/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "好友表"
-		}
-	}
-	,{
-		"path": "pages/friend/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "好友表"
-		}
-	}
-	,{
-		"path": "pages/chathelper/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "聊天助手表"
-		}
-	},{
-		"path": "pages/chathelper/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "聊天助手表"
-		}
-	}
-	,{
-		"path": "pages/chathelper/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "聊天助手表"
-		}
-	}
-	,{
-		"path": "pages/syslog/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "系统日志"
-		}
-	},{
-		"path": "pages/syslog/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "系统日志"
-		}
-	}
-	,{
-		"path": "pages/syslog/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "系统日志"
-		}
-	}
-	,{
-		"path": "pages/storeup/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "收藏表"
-		}
-	},{
-		"path": "pages/storeup/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "收藏表"
-		}
-	}
-	,{
-		"path": "pages/storeup/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "收藏表"
-		}
-	}
-	,{
-		"path": "pages/smsregistercode/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "短信验证码"
-		}
-	},{
-		"path": "pages/smsregistercode/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "短信验证码"
-		}
-	}
-	,{
-		"path": "pages/smsregistercode/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "短信验证码"
-		}
-	}
-	,{
-		"path": "pages/users/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "管理员"
-		}
-	},{
-		"path": "pages/users/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "管理员"
-		}
-	}
-	,{
-		"path": "pages/users/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "管理员"
-		}
-	}
-	,{
-		"path": "pages/menu/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "菜单"
-		}
-	},{
-		"path": "pages/menu/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "菜单"
-		}
-	}
-	,{
-		"path": "pages/menu/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "菜单"
-		}
-	}
-	,{
-		"path": "pages/discussfuwuxinxi/list",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务信息评论"
-		}
-	},{
-		"path": "pages/discussfuwuxinxi/add-or-update",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务信息评论"
-		}
-	}
-	,{
-		"path": "pages/discussfuwuxinxi/detail",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white",
-			"navigationBarTitleText": "服务信息评论"
-		}
-	}
-	, {
-		"path": "pages/pay-confirm/pay-confirm",
-		"style": {
-			"navigationBarTitleText": "确认支付"
-		}
-	}
-	,{
-		"path": "common/linkOthers/linkOthers",
-		"style": {
-			"navigationBarBackgroundColor": "#ff6f9f",
-			"navigationBarTextStyle": "white"
-		}
-	}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -562,38 +127,595 @@
 				"iconPath": "static/tabs/index.png",
 				"selectedIconPath": "static/tabs/index1.png",
 				"text": "首页"
-			}
-			
-
-			,{
+			},
+			{
 				"pagePath": "pages/fuwuxinxi/list",
 				"iconPath": "/static/tabs/icon1.png",
 				"selectedIconPath": "/static/tabs/icon1_act.png",
 				"text": "服务信息"
-			}
-
-			,{
+			},
+			{
 				"pagePath": "pages/news/list",
 				"iconPath": "static/tabs/news.png",
 				"selectedIconPath": "static/tabs/news_act.png",
 				"text": "通知公告"
-			}
-			,{
+			},
+			{
 				"pagePath": "pages/chat/chat",
 				"iconPath": "static/tabs/service.png",
 				"selectedIconPath": "static/tabs/service_act.png",
 				"text": "在线客服"
-			}
-
-
-
-
-			,{
+			},
+			{
 				"pagePath": "pages/center/center",
 				"iconPath": "static/tabs/mine.png",
 				"selectedIconPath": "static/tabs/mine1.png",
 				"text": "我的"
 			}
 		]
-	}
+	},
+	"subPackages": [
+		{
+			"root": "pages/yonghu",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "用户"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "用户"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "用户"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/fuwurenyuan",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务人员"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务人员"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务人员"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/fuwuleixing",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务类型"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务类型"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务类型"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/fuwuyuyue",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务预约"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务预约"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务预约"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/quxiaoyuyue",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "取消预约"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "取消预约"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "取消预约"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/fuwudingdan",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务订单"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务订单"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务订单"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/fuwujilu",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务记录"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务记录"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务记录"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/fuwuqueren",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务确认"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务确认"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务确认"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/caiwujiesuan",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "财务结算"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "财务结算"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "财务结算"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/shourumingxi",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "收入明细"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "收入明细"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "收入明细"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/chatmessage",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "消息表"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "消息表"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "消息表"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/friend",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "好友表"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "好友表"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "好友表"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/chathelper",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "聊天助手表"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "聊天助手表"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "聊天助手表"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/syslog",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "系统日志"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "系统日志"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "系统日志"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/storeup",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "收藏表"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "收藏表"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "收藏表"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/smsregistercode",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "短信验证码"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "短信验证码"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "短信验证码"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/users",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "管理员"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "管理员"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "管理员"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/menu",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "菜单"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "菜单"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "菜单"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/discussfuwuxinxi",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务信息评论"
+					}
+				},
+				{
+					"path": "add-or-update",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务信息评论"
+					}
+				},
+				{
+					"path": "detail",
+					"style": {
+						"navigationBarBackgroundColor": "#ff6f9f",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "服务信息评论"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/pay-confirm",
+			"pages": [
+				{
+					"path": "pay-confirm",
+					"style": {
+						"navigationBarTitleText": "确认支付"
+					}
+				}
+			]
+		}
+	]
 }

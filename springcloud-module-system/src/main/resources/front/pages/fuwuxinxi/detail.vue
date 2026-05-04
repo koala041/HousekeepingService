@@ -9,6 +9,9 @@
 					<img :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx","display":"block","height":"440rpx"}' v-if="swiper.substring(0,4)=='http'" :src="swiper" @tap="imgView(swiper)">
 					<img :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx","display":"block","height":"440rpx"}' v-else :src="baseUrl+swiper" @tap="imgView(baseUrl+swiper)">
 				</swiper-item>
+				<swiper-item v-if="swiperList.length == 0" :style='{"width":"100%","borderRadius":"12rpx","background":"#fff","height":"440rpx"}'>
+					<img :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx","display":"block","height":"440rpx"}' :src="getDefaultImage(this.detail.id)">
+				</swiper-item>
 			</swiper>
 			<view :style='{"alignContent":"flex-start","padding":"24rpx 0 24rpx 0","alignItems":"flex-start","flexWrap":"wrap","background":"#fff","display":"flex","width":"100%","height":"auto"}' class="detail-content">
 				<view :style='{"padding":"0","margin":"0 0 12rpx 0","borderColor":"#25252530","flexWrap":"wrap","borderWidth":"0px","display":"flex","width":"100%","borderStyle":"solid","justifyContent":"space-between","height":"auto"}' class="detail-list-item price">
@@ -280,6 +283,10 @@
 			//window.clearInterval(this.inter);
 		},
 		methods: {
+			getDefaultImage(id){
+				const random = (id * 9973) % 22 + 1
+				return `/static/default/default${random}.jpg`
+			},
 			scrollChange(e){
 				this.scrollTop = e.scrollTop
 			},

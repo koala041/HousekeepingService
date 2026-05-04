@@ -141,7 +141,7 @@
 				// 倒计时定时器
 				inter: null,
 				// 倒计时
-				count: 10,
+				count: 300,
 				//倒计时结束标识
 				isEndFlag: true,
 				tableName:"",
@@ -157,9 +157,10 @@
 				return this.$base.url;
 			},
 			SecondToDate: function() {
-				var time = this.count;
-				time = parseInt(time) + "秒后重发";
-				return time;
+				let time = parseInt(this.count || 0)
+				let minute = Math.floor(time / 60)
+				let second = time % 60
+				return `${minute}:${second < 10 ? '0' + second : second}后重发`
 			}
 		},
 		async onLoad() {
@@ -227,14 +228,19 @@
 						_this.count = _this.count - 1;
 						if (_this.count <= 0) {
 							clearInterval(_this.inter);
-							_this.count=60;
+							_this.count=300;
 							_this.isEndFlag = true;
 						}
 					}, 1000);
 				}
 				let res = await this.$api.sendsms(`${this.tableName}`, this.ruleForm.mobile);
 				if (res.code == 0) {
-					this.$utils.msg(`发送成功`);
+					if(res.mock) {
+						this.smscode = res.data
+						this.$utils.msg(`短信服务未配置，已使用本地验证码：${res.data}`);
+					} else {
+						this.$utils.msg(`发送成功`);
+					}
 				} else {
 					this.$utils.errMsg(`服务器异常，请稍后重试`);
 					return;

@@ -53,11 +53,6 @@ public class FuwuxinxiController {
     private StoreupService storeupService;
 
 
-
-    
-
-
-
     /**
      * 后台列表
      */
@@ -66,7 +61,6 @@ public class FuwuxinxiController {
 		HttpServletRequest request){
         //设置查询条件
         EntityWrapper<FuwuxinxiEntity> ew = new EntityWrapper<FuwuxinxiEntity>();
-
 
         //查询结果
 		PageUtils page = fuwuxinxiService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, fuwuxinxi), params), params));
@@ -129,6 +123,33 @@ public class FuwuxinxiController {
         //给需要脱敏的字段脱敏
         DeSensUtil.desensitize(page,deSens);
         return R.ok().put("data", page);
+    }
+
+    /**
+     * 前台服务类型数量统计
+     */
+    @IgnoreAuth
+    @RequestMapping("/typeCounts")
+    public R typeCounts(@RequestParam(required = false) Integer onshelves){
+        EntityWrapper<FuwuxinxiEntity> ew = new EntityWrapper<FuwuxinxiEntity>();
+        if(onshelves!=null) {
+            ew.eq("onshelves", onshelves);
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("column", "fuwuleixing");
+        List<Map<String, Object>> rows = fuwuxinxiService.selectGroup(params, ew);
+        Map<String, Integer> counts = new LinkedHashMap<String, Integer>();
+        int total = 0;
+        for(Map<String, Object> item : rows) {
+            String type = item.get("fuwuleixing")==null?null:item.get("fuwuleixing").toString();
+            if(StringUtils.isBlank(type)) {
+                continue;
+            }
+            Integer count = Integer.valueOf(item.get("total").toString());
+            counts.put(type, count);
+            total += count;
+        }
+        return R.ok().put("data", counts).put("total", total);
     }
 
 
@@ -224,9 +245,6 @@ public class FuwuxinxiController {
     }
 
 
-
-
-
     /**
      * 修改
      */
@@ -240,9 +258,6 @@ public class FuwuxinxiController {
         return R.ok();
     }
 
-
-
-    
 
     /**
      * 删除
@@ -289,48 +304,88 @@ public class FuwuxinxiController {
      */
     @RequestMapping("/autoSort2")
     public R autoSort2(@RequestParam Map<String, Object> params,FuwuxinxiEntity fuwuxinxi, HttpServletRequest request){
-        String userId = request.getSession().getAttribute("userId").toString();
-        String inteltypeColumn = "fuwuleixing";
-        // 查询收藏集合
-        List<StoreupEntity> storeups = storeupService.selectList(new EntityWrapper<StoreupEntity>().eq("type", 1).eq("userid", userId).eq("tablename", "fuwuxinxi").orderBy("addtime", false));
-        List<String> inteltypes = new ArrayList<String>();
+        Object sessionUserId = request.getSession().getAttribute("userId");
+        if(sessionUserId==null) {
+            return autoSort(params, fuwuxinxi, request, "");
+        }
+        Long userId = Long.valueOf(sessionUserId.toString());
         Integer limit = params.get("limit")==null?10:Integer.parseInt(params.get("limit").toString());
-        List<FuwuxinxiEntity> fuwuxinxiList = new ArrayList<FuwuxinxiEntity>();
-        //去重
-        if(storeups!=null && storeups.size()>0) {
-            List<String> typeList = new ArrayList<String>();
-            for(StoreupEntity s : storeups) {
-                if(typeList.contains(s.getInteltype())) continue;
-                typeList.add(s.getInteltype());
-                fuwuxinxiList.addAll(fuwuxinxiService.selectList(new EntityWrapper<FuwuxinxiEntity>().eq(inteltypeColumn, s.getInteltype())));
+        Integer pageNum = params.get("page")==null?1:Integer.parseInt(params.get("page").toString());
+
+        List<StoreupEntity> allStoreups = storeupService.selectList(new EntityWrapper<StoreupEntity>()
+                .eq("type", 1).eq("tablename", "fuwuxinxi"));
+        Map<Long, Set<Long>> userItems = new HashMap<Long, Set<Long>>();
+        Map<Long, String> itemTypeByStoreup = new HashMap<Long, String>();
+        for(StoreupEntity s : allStoreups) {
+            if(s.getUserid()==null || s.getRefid()==null) {
+                continue;
+            }
+            userItems.computeIfAbsent(s.getUserid(), k -> new HashSet<Long>()).add(s.getRefid());
+            if(StringUtils.isNotBlank(s.getInteltype())) {
+                itemTypeByStoreup.put(s.getRefid(), s.getInteltype());
             }
         }
-        EntityWrapper<FuwuxinxiEntity> ew = new EntityWrapper<FuwuxinxiEntity>();
-        params.put("sort", "id");
-        params.put("order", "desc");
-        // 根据协同结果查询结果并返回
-        PageUtils page = fuwuxinxiService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, fuwuxinxi), params), params));
-        List<FuwuxinxiEntity> pageList = (List<FuwuxinxiEntity>)page.getList();
-        if(fuwuxinxiList.size()<limit) {
-            int toAddNum = (limit-fuwuxinxiList.size())<=pageList.size()?(limit-fuwuxinxiList.size()):pageList.size();
-            for(FuwuxinxiEntity o1 : pageList) {
-                boolean addFlag = true;
-                for(FuwuxinxiEntity o2 : fuwuxinxiList) {
-                    if(o1.getId().intValue()==o2.getId().intValue()) {
-                        addFlag = false;
-                        break;
+        Set<Long> currentItems = userItems.getOrDefault(userId, new HashSet<Long>());
+        Set<String> currentTypes = new HashSet<String>();
+        for(Long refid : currentItems) {
+            String type = itemTypeByStoreup.get(refid);
+            if(StringUtils.isNotBlank(type)) {
+                currentTypes.add(type);
+            }
+        }
+
+        Map<Long, Double> candidateScore = new HashMap<Long, Double>();
+        if(!currentItems.isEmpty()) {
+            for(Map.Entry<Long, Set<Long>> entry : userItems.entrySet()) {
+                if(entry.getKey().equals(userId)) {
+                    continue;
+                }
+                Set<Long> otherItems = entry.getValue();
+                Set<Long> intersection = new HashSet<Long>(currentItems);
+                intersection.retainAll(otherItems);
+                if(intersection.isEmpty()) {
+                    continue;
+                }
+                Set<Long> union = new HashSet<Long>(currentItems);
+                union.addAll(otherItems);
+                double similarity = union.isEmpty()?0D:(double)intersection.size()/union.size();
+                for(Long refid : otherItems) {
+                    if(currentItems.contains(refid)) {
+                        continue;
                     }
-                }
-                if(addFlag) {
-                    fuwuxinxiList.add(o1);
-                    if(--toAddNum==0) break;
+                    candidateScore.put(refid, candidateScore.getOrDefault(refid, 0D) + similarity);
                 }
             }
-        } else if(fuwuxinxiList.size()>limit) {
-            fuwuxinxiList = fuwuxinxiList.subList(0, limit);
         }
-        page.setList(fuwuxinxiList);
-        return R.ok().put("data", page);
+
+        List<FuwuxinxiEntity> allServices = fuwuxinxiService.selectList(new EntityWrapper<FuwuxinxiEntity>().eq("onshelves", 1));
+        for(FuwuxinxiEntity item : allServices) {
+            if(!currentItems.contains(item.getId()) && currentTypes.contains(item.getFuwuleixing())) {
+                candidateScore.put(item.getId(), candidateScore.getOrDefault(item.getId(), 0D) + 0.2D);
+            }
+        }
+
+        List<FuwuxinxiEntity> result = allServices.stream()
+                .filter(item -> !currentItems.contains(item.getId()))
+                .sorted((a, b) -> {
+                    double scoreA = candidateScore.getOrDefault(a.getId(), 0D);
+                    double scoreB = candidateScore.getOrDefault(b.getId(), 0D);
+                    int scoreCompare = Double.compare(scoreB, scoreA);
+                    if(scoreCompare!=0) {
+                        return scoreCompare;
+                    }
+                    int hotA = (a.getStoreupnum()==null?0:a.getStoreupnum()) + (a.getThumbsupnum()==null?0:a.getThumbsupnum());
+                    int hotB = (b.getStoreupnum()==null?0:b.getStoreupnum()) + (b.getThumbsupnum()==null?0:b.getThumbsupnum());
+                    return Integer.compare(hotB, hotA);
+                }).collect(Collectors.toList());
+
+        if(result.isEmpty()) {
+            result = allServices;
+        }
+        int fromIndex = Math.max((pageNum - 1) * limit, 0);
+        int toIndex = Math.min(fromIndex + limit, result.size());
+        List<FuwuxinxiEntity> pageList = fromIndex>=result.size()?new ArrayList<FuwuxinxiEntity>():result.subList(fromIndex, toIndex);
+        return R.ok().put("data", new PageUtils(pageList, result.size(), limit, pageNum));
     }
 
 

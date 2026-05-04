@@ -177,17 +177,25 @@ public class CommonUtil {
     }
 
 
-    public static void sendSMS(String phone,String key){
-        //请使用自己的accessKeyid和accessKeySecret,建议在config表中修改
+    public static boolean sendSMS(String phone,String key){
+        // 请使用自己的accessKeyId和accessKeySecret，建议在config表中修改。
         String accessKeyId = ConfigUtil.getConfigValue("aliyun", "accessKeyId");
+        System.out.println(accessKeyId);
         String accessKeySecret = ConfigUtil.getConfigValue("aliyun", "accessKeySecret");
+        System.out.println(accessKeySecret);
+        if(StringUtils.isBlank(accessKeyId) || StringUtils.isBlank(accessKeySecret)) {
+            System.out.println("短信未真实发送：未配置阿里云accessKeyId/accessKeySecret，本地验证码为 " + key);
+            return false;
+        }
         AsyncClient client = null;
         try {
             StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder().accessKeyId(accessKeyId).accessKeySecret(accessKeySecret).build());
 
             client = AsyncClient.builder().region("cn-shenzhen").credentialsProvider(provider).overrideConfiguration(ClientOverrideConfiguration.create().setEndpointOverride("dypnsapi.aliyuncs.com")).build();
-            String signName = "速通互联验证码";//短信签名,如果是使用阿里云的测试模板，不用改动
-            String templateCode = "100001";//模板Code,如果是使用阿里云的测试模板，不用改动
+            // 短信签名,如果是使用阿里云的测试模板
+            String signName = "速通互联验证码";
+            //模板Code,如果是使用阿里云的测试模板
+            String templateCode = "100001";
             String templateParam = "{\"code\":\"" + key + "\",\"min\":\"5\"}";
             SendSmsVerifyCodeRequest sendSmsVerifyCodeRequest = SendSmsVerifyCodeRequest.builder().signName(signName).templateCode(templateCode).phoneNumber(phone).returnVerifyCode(true).templateParam(templateParam).build();
 
@@ -195,8 +203,10 @@ public class CommonUtil {
 
             SendSmsVerifyCodeResponse resp = response.get();
             System.out.println(new Gson().toJson(resp.getBody()));
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("短信发送失败：" + e.getMessage());
+            return false;
         } finally {
             if (client != null) {
                 client.close();

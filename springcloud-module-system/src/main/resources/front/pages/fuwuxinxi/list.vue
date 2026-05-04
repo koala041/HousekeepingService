@@ -27,13 +27,13 @@
 				</view>
 				<view :style='{"alignContent":"flex-start","alignItems":"flex-start","flexWrap":"wrap","background":"#ffffff","display":"flex","width":"100%","position":"initial","height":"auto","order":"4"}'>
 					<scroll-view scroll-x="true" class="category-one" :style='{"padding":"20rpx","margin":"0px 0 20rpx 0","borderColor":"#dddddd","whiteSpace":"nowrap","background":"#ff6f9f","borderWidth":"0","display":"flex","width":"100%","borderStyle":"solid","height":"auto"}'>
-						<view :class='categoryName === item.fuwuleixing ? "active" : ""' class="tab" v-for="(item,index) in categoryList" :key="index" @tap="categoryClick(item.fuwuleixing)">{{item.fuwuleixing}}</view>
+						<view :class='categoryName === item.fuwuleixing ? "active" : ""' class="tab" v-for="(item,index) in categoryList" :key="index" @tap="categoryClick(index)">{{item.displayName}}</view>
 					</scroll-view>
 					<!-- 样式2 -->
 					<view class="list" :style='{"padding":"24rpx","margin":"0","flexWrap":"wrap","display":"flex","width":"100%","justifyContent":"space-between","height":"auto","order":"4"}'>
-						<view @tap="onDetailTap(product)" class="listm flex flex-between" :style='{"padding":"0 0 20rpx 0","boxShadow":"0 2rpx 12rpx #cccccc","margin":"0 0 30rpx 0","borderColor":"#eeeeee","borderRadius":"12rpx","alignItems":"flex-start","flexWrap":"wrap","borderWidth":"0 0 0px 0","display":"flex","width":"48%","borderStyle":"solid","height":"auto"}' v-for="(product,index) in list" :key="index">
-							<image :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' mode="aspectFill" class="listmpic" v-if="preHttp(product.xiangmutupian)" :src="product.xiangmutupian.split(',')[0]"></image>
-							<image :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' mode="aspectFill" class="listmpic" v-else :src="product.xiangmutupian?baseUrl+product.xiangmutupian.split(',')[0]:''"></image>
+						<view @tap="onDetailTap(product)" class="listm flex flex-between" :style='{"padding":"0 0 20rpx 0","boxShadow":"0 2rpx 12rpx #cccccc","margin":"0 0 30rpx 0","borderColor":"#eeeeee","borderRadius":"12rpx","alignItems":"flex-start","flexWrap":"wrap","borderWidth":"0 0 0px 0","display":"flex","width":"48%","borderStyle":"solid","height":"auto"}' v-for="(product,index) in list" :key="product.id || index">
+							<image lazy-load :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' mode="aspectFill" class="listmpic" v-if="preHttp(product.xiangmutupian)" :src="product.xiangmutupian.split(',')[0]"></image>
+							<image lazy-load :style='{"width":"100%","objectFit":"cover","borderRadius":"12rpx 12rpx 0 0","display":"block","height":"320rpx"}' mode="aspectFill" class="listmpic" v-else :src="product.xiangmutupian?baseUrl+product.xiangmutupian.split(',')[0]:getDefaultImage(product.id)"></image>
 
 							<view class="listmr" :style='{"width":"100%","padding":"0 20rpx 0 20rpx","margin":"0","flexWrap":"wrap","display":"flex","height":"auto"}'>
 								<view class="col3 f30 elip mb15" :style='{"padding":"0","margin":"0","overflow":"hidden","whiteSpace":"nowrap","color":"#333","width":"100%","lineHeight":"1.8","fontSize":"28rpx","textOverflow":"ellipsis","fontWeight":"500"}'>{{product.xiangmubianhao}}</view>
@@ -133,6 +133,9 @@
 					auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
 				},
 				upOption: {
+					page: {
+						size: 8
+					},
 					noMoreSize: 5, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
 					textNoMore: '~ 没有更多了 ~',
 					onScroll: true,
@@ -210,14 +213,7 @@
 			this.btnColor = this.btnColor.sort(()=> {
 				return (0.5-Math.random());
 			});
-			let res = {};
-			if(this.userid) {
-				res = await this.$api.page('fuwuleixing', {page:1,limit:100});
-			} else {
-				res = await this.$api.list('fuwuleixing', {page:1,limit:100});
-			}
-			res.data.list.splice(0,0,{id:0,fuwuleixing:'全部'})
-			this.categoryList = res.data.list;
+			await this.loadCategoryList()
 			this.hasNext = true
 			// 重新加载数据
 			if (this.mescroll) this.mescroll.resetUpScroll()
@@ -295,11 +291,30 @@
             priceChange(price) {
                 return Number(price).toFixed(2);
             },
-            preHttp(str) {
-                return str && str.substr(0,4)=='http';
-            },
+			preHttp(str) {
+			    return str && str.substr(0,4)=='http';
+			},
+			getDefaultImage(id){
+				const random = (id * 9973) % 22 + 1
+				return `/static/default/default${random}.jpg`
+			},
+			async loadCategoryList() {
+				let res = this.userid ? await this.$api.page('fuwuleixing', {page:1,limit:100}) : await this.$api.list('fuwuleixing', {page:1,limit:100})
+				let countRes = await this.$api.typeCounts('fuwuxinxi', this.userid ? {} : {onshelves: 1})
+				let counts = (countRes && countRes.data) || {}
+				let total = Number((countRes && countRes.total) || 0)
+				let list = (res.data && res.data.list ? res.data.list : []).map(item => {
+					let count = Number(counts[item.fuwuleixing] || 0)
+					return Object.assign({}, item, {count: count, displayName: `${item.fuwuleixing}(${count})`})
+				})
+				list.splice(0,0,{id:0,fuwuleixing:'全部',count:total,displayName:`全部(${total})`})
+				this.categoryList = list
+			},
 			//类别搜索
-			categoryClick(categoryName){
+			categoryClick(index){
+				let item = this.categoryList[index]
+				if(!item) return
+				let categoryName = item.fuwuleixing
 				this.categoryName = categoryName;
 				this.mescroll.resetUpScroll();
 			},
@@ -348,16 +363,9 @@
 				// 如果是第一页数据置空
 				if (mescroll.num == 1) this.list = [];
 				this.list = this.list.concat(res.data.list);
-				this.$forceUpdate()
-				
-				let length = Math.ceil(this.list.length/6)
-				let arr = [];
-				for (let i = 0; i<length; i++){
-					arr[i] = this.list.slice(i*6, (i+1)*6)
-				}
-				this.lists = arr
-				if (res.data.list.length == 0) this.hasNext = false;
-				mescroll.endSuccess(mescroll.size, this.hasNext);
+				let total = Number(res.data.total || 0)
+				this.hasNext = total ? this.list.length < total : res.data.list.length >= mescroll.size;
+				mescroll.endSuccess(res.data.list.length, this.hasNext);
 			},
 			// 详情
 			onDetailTap(item) {
@@ -445,14 +453,9 @@
 				if (this.mescroll.num == 1) this.list = [];
 				this.list = this.list.concat(res.data.list);
 				
-				let length = Math.ceil(this.list.length/6)
-				let arr = [];
-				for (let i = 0; i<length; i++){
-					arr[i] = this.list.slice(i*6, (i+1)*6)
-				}
-				this.lists = arr
-				if (res.data.list.length == 0) this.hasNext = false;
-				this.mescroll.endSuccess(this.mescroll.size, this.hasNext);
+				let total = Number(res.data.total || 0)
+				this.hasNext = total ? this.list.length < total : res.data.list.length >= this.mescroll.size;
+				this.mescroll.endSuccess(res.data.list.length, this.hasNext);
 				this.screenBoxShow = false
 			},
 			staticClick() {
