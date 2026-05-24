@@ -1,44 +1,35 @@
 server:
-  port: 8848   #如何修改 pig-register 启动端口 >: https://t.cn/A6XGvTdb
+  port: 8848
   tomcat:
     basedir: logs
 
+spring:
+  application:
+    name: nacos
+  main:
+    allow-circular-references: true
+  security:
+    enabled: false
+
+# 👇👇👇 只保留这个 db 配置！！！这是 Nacos 2.x 唯一认的数据源配置
 db:
   num: 1
   user: root
-  password: lyk23430852
-  url:
-    0: jdbc:mysql://127.0.0.1:3306/nacos_config?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+  password: 20040104
+  url: jdbc:mysql://127.0.0.1:3306/nacos_config?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
 
 nacos:
   core:
     auth:
-      plugin.nacos.token.secret.key: SecretKey012345678901234567890123456789012345678901234567890123456789
       enabled: false
       system.type: nacos
+      plugin.nacos.token.secret.key: SecretKey012345678901234567890123456789012345678901234567890123456789
   security:
     ignore:
       urls: /,/error,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-fe/public/**,/v1/auth/**,/v1/console/health/**,/actuator/**,/v1/console/server/**
-
-spring:
-  datasource:
-    platform: mysql  #这个过期属性不能修改，nacos 代码对此有硬编码
-  security:
-    enabled: true
-  application:
-    name: @project.artifactId@
-  main:
-    allow-circular-references: true
-useAddressServer: true
 
 management:
   endpoints:
     web:
       exposure:
         include: '*'
-  metrics:
-    export:
-      influx:
-        enabled: false
-      elastic:
-        enabled: false
