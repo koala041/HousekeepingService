@@ -7,8 +7,9 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 /**
-* 类说明 : 
-*/
+* 类说明 :
+ * @author GG Bond
+ */
 @TableName("config")
 public class ConfigEntity implements Serializable{
 private static final long serialVersionUID = 1L;

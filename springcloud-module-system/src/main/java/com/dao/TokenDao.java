@@ -12,6 +12,7 @@ import com.entity.TokenEntity;
 
 /**
  * token
+ * @author GG Bond
  */
 public interface TokenDao extends BaseMapper<TokenEntity> {
 	

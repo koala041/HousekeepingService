@@ -15,7 +15,7 @@ import java.io.Serializable;
  * 接收传参的实体类  
  *（实际开发中配合移动端接口开发手动去掉些没用的字段， 后端一般用entity就够用了） 
  * 取自ModelAndView 的model名称
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:57
  */

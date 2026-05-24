@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * 聊天助手表
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
@@ -47,13 +47,6 @@ public class ChathelperController {
     @Autowired
     private ChathelperService chathelperService;
 
-
-
-
-    
-
-
-
     /**
      * 后台列表
      */
@@ -62,7 +55,6 @@ public class ChathelperController {
 		HttpServletRequest request){
         //设置查询条件
         EntityWrapper<ChathelperEntity> ew = new EntityWrapper<ChathelperEntity>();
-
 
         //查询结果
 		PageUtils page = chathelperService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, chathelper), params), params));
@@ -175,7 +167,6 @@ public class ChathelperController {
         return R.ok().put("data", chathelper);
     }
 
-
     /**
      * 修改
      */
@@ -184,14 +175,9 @@ public class ChathelperController {
     @IgnoreAuth
     public R update(@RequestBody ChathelperEntity chathelper, HttpServletRequest request){
         //ValidatorUtils.validateEntity(chathelper);
-        //全部更新
         chathelperService.updateById(chathelper);
         return R.ok();
     }
-
-
-
-    
 
     /**
      * 删除
@@ -231,10 +217,4 @@ public class ChathelperController {
 		PageUtils page = chathelperService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, chathelper), params), params));
         return R.ok().put("data", page);
     }
-
-
-
-
-
-
 }

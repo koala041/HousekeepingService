@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * Map工具类
+ * @author GG Bond
  */
 public class MapUtils extends HashMap<String, Object> {
 

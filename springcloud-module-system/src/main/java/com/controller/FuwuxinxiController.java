@@ -39,7 +39,7 @@ import com.entity.StoreupEntity;
 /**
  * 服务信息
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:57
  */
@@ -103,19 +103,45 @@ public class FuwuxinxiController {
         if(onshelvesstart!=null) ew.ge("onshelves", onshelvesstart);
         if(onshelvesend!=null) ew.le("onshelves", onshelvesend);
         if(xiaoliangstart!=null) ew.ge("xiaoliang", xiaoliangstart);
-        if(xiaoliangend!=null) ew.le("xiaoliang", xiaoliangend);
-        if(thumbsupnumstart!=null) ew.ge("thumbsupnum", thumbsupnumstart);
-        if(thumbsupnumend!=null) ew.le("thumbsupnum", thumbsupnumend);
-        if(crazilynumstart!=null) ew.ge("crazilynum", crazilynumstart);
-        if(crazilynumend!=null) ew.le("crazilynum", crazilynumend);
-        if(clicktimestart!=null) ew.ge("clicktime", clicktimestart);
-        if(clicktimeend!=null) ew.le("clicktime", clicktimeend);
-        if(discussnumstart!=null) ew.ge("discussnum", discussnumstart);
-        if(discussnumend!=null) ew.le("discussnum", discussnumend);
-        if(totalscorestart!=null) ew.ge("totalscore", totalscorestart);
-        if(totalscoreend!=null) ew.le("totalscore", totalscoreend);
-        if(storeupnumstart!=null) ew.ge("storeupnum", storeupnumstart);
-        if(storeupnumend!=null) ew.le("storeupnum", storeupnumend);
+        if(xiaoliangend!=null) {
+            ew.le("xiaoliang", xiaoliangend);
+        }
+        if(thumbsupnumstart!=null) {
+            ew.ge("thumbsupnum", thumbsupnumstart);
+        }
+        if(thumbsupnumend!=null) {
+            ew.le("thumbsupnum", thumbsupnumend);
+        }
+        if(crazilynumstart!=null) {
+            ew.ge("crazilynum", crazilynumstart);
+        }
+        if(crazilynumend!=null) {
+            ew.le("crazilynum", crazilynumend);
+        }
+        if(clicktimestart!=null) {
+            ew.ge("clicktime", clicktimestart);
+        }
+        if(clicktimeend!=null) {
+            ew.le("clicktime", clicktimeend);
+        }
+        if(discussnumstart!=null) {
+            ew.ge("discussnum", discussnumstart);
+        }
+        if(discussnumend!=null) {
+            ew.le("discussnum", discussnumend);
+        }
+        if(totalscorestart!=null) {
+            ew.ge("totalscore", totalscorestart);
+        }
+        if(totalscoreend!=null) {
+            ew.le("totalscore", totalscoreend);
+        }
+        if(storeupnumstart!=null) {
+            ew.ge("storeupnum", storeupnumstart);
+        }
+        if(storeupnumend!=null) {
+            ew.le("storeupnum", storeupnumend);
+        }
 
         //查询结果
 		PageUtils page = fuwuxinxiService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, fuwuxinxi), params), params));
@@ -270,11 +296,13 @@ public class FuwuxinxiController {
     }
     
 	/**
+     * 未登录
      * 前台智能排序
      */
 	@IgnoreAuth
     @RequestMapping("/autoSort")
     public R autoSort(@RequestParam Map<String, Object> params,FuwuxinxiEntity fuwuxinxi, HttpServletRequest request,String pre){
+        System.out.println("【前端调用 → 普通排序接口 autoSort（未登录）】");
         EntityWrapper<FuwuxinxiEntity> ew = new EntityWrapper<FuwuxinxiEntity>();
         ew.eq("onshelves","1");
         Map<String, Object> newMap = new HashMap<String, Object>();
@@ -300,95 +328,120 @@ public class FuwuxinxiController {
     }
 
     /**
-     * 协同算法（按收藏推荐）
+     * 协同过滤算法（调用工具类）
      */
     @RequestMapping("/autoSort2")
-    public R autoSort2(@RequestParam Map<String, Object> params,FuwuxinxiEntity fuwuxinxi, HttpServletRequest request){
+    public R autoSort2(@RequestParam Map<String, Object> params, FuwuxinxiEntity fuwuxinxi, HttpServletRequest request) {
         Object sessionUserId = request.getSession().getAttribute("userId");
-        if(sessionUserId==null) {
+
+        // ========== 协同过滤调试打印 ==========
+        System.out.println("======================================");
+        System.out.println("【前端调用了 → 协同过滤推荐接口 autoSort2】");
+        System.out.println("当前登录用户ID：" + sessionUserId);
+        System.out.println("======================================");
+
+        if (sessionUserId == null) {
             return autoSort(params, fuwuxinxi, request, "");
         }
-        Long userId = Long.valueOf(sessionUserId.toString());
-        Integer limit = params.get("limit")==null?10:Integer.parseInt(params.get("limit").toString());
-        Integer pageNum = params.get("page")==null?1:Integer.parseInt(params.get("page").toString());
 
+        Long userId = Long.valueOf(sessionUserId.toString());
+        Integer limit = params.get("limit") == null ? 10 : Integer.parseInt(params.get("limit").toString());
+        Integer pageNum = params.get("page") == null ? 1 : Integer.parseInt(params.get("page").toString());
+
+        // ===================== 1. 获取所有收藏数据 =====================
         List<StoreupEntity> allStoreups = storeupService.selectList(new EntityWrapper<StoreupEntity>()
                 .eq("type", 1).eq("tablename", "fuwuxinxi"));
-        Map<Long, Set<Long>> userItems = new HashMap<Long, Set<Long>>();
-        Map<Long, String> itemTypeByStoreup = new HashMap<Long, String>();
-        for(StoreupEntity s : allStoreups) {
-            if(s.getUserid()==null || s.getRefid()==null) {
+
+        // ===================== 2. 构建用户行为数据（给工具类使用） =====================
+        List<UserBasedCollaborativeFiltering.UserBehavior> behaviors = new ArrayList<>();
+        Map<Long, String> itemTypeMap = new HashMap<>();
+
+        for (StoreupEntity s : allStoreups) {
+            if (s.getUserid() == null || s.getRefid() == null) {
                 continue;
             }
-            userItems.computeIfAbsent(s.getUserid(), k -> new HashSet<Long>()).add(s.getRefid());
-            if(StringUtils.isNotBlank(s.getInteltype())) {
-                itemTypeByStoreup.put(s.getRefid(), s.getInteltype());
-            }
-        }
-        Set<Long> currentItems = userItems.getOrDefault(userId, new HashSet<Long>());
-        Set<String> currentTypes = new HashSet<String>();
-        for(Long refid : currentItems) {
-            String type = itemTypeByStoreup.get(refid);
-            if(StringUtils.isNotBlank(type)) {
-                currentTypes.add(type);
+
+            String uid = s.getUserid().toString();
+            String itemId = s.getRefid().toString();
+            behaviors.add(new UserBasedCollaborativeFiltering.UserBehavior(uid, itemId));
+
+            if (StringUtils.isNotBlank(s.getInteltype())) {
+                itemTypeMap.put(s.getRefid(), s.getInteltype());
             }
         }
 
-        Map<Long, Double> candidateScore = new HashMap<Long, Double>();
-        if(!currentItems.isEmpty()) {
-            for(Map.Entry<Long, Set<Long>> entry : userItems.entrySet()) {
-                if(entry.getKey().equals(userId)) {
-                    continue;
-                }
-                Set<Long> otherItems = entry.getValue();
-                Set<Long> intersection = new HashSet<Long>(currentItems);
-                intersection.retainAll(otherItems);
-                if(intersection.isEmpty()) {
-                    continue;
-                }
-                Set<Long> union = new HashSet<Long>(currentItems);
-                union.addAll(otherItems);
-                double similarity = union.isEmpty()?0D:(double)intersection.size()/union.size();
-                for(Long refid : otherItems) {
-                    if(currentItems.contains(refid)) {
-                        continue;
-                    }
-                    candidateScore.put(refid, candidateScore.getOrDefault(refid, 0D) + similarity);
-                }
+        // ===================== 3. 调用工具类进行推荐 =====================
+        UserBasedCollaborativeFiltering filter = new UserBasedCollaborativeFiltering();
+        System.out.println("【正在执行 → 标准协同过滤工具类算法】");
+        List<String> recommendedItemIds = filter.recommendItems(
+                behaviors,                             // 2. 所有用户的历史行为数据（用户-物品-评分）
+                userId.toString(),                     // 3. 当前要给谁推荐：目标用户ID
+                200,                // 4. 最多推荐多少个物品：返回Top200
+                true                        // 5. 推荐模式：true=UserCF用户协同，false=ItemCF物品协同
+        );
+
+        // ===================== 4. 获取所有上架服务 =====================
+        List<FuwuxinxiEntity> allServices = fuwuxinxiService.selectList(
+                new EntityWrapper<FuwuxinxiEntity>().eq("onshelves", 1)
+        );
+
+        // ===================== 5. 构建推荐分数Map =====================
+        Map<Long, Double> scoreMap = new HashMap<>();
+        Set<Long> userCollected = new HashSet<>();
+
+        // 标记用户已收藏的
+        for (StoreupEntity s : allStoreups) {
+            if (userId.equals(s.getUserid())) {
+                userCollected.add(s.getRefid());
             }
         }
 
-        List<FuwuxinxiEntity> allServices = fuwuxinxiService.selectList(new EntityWrapper<FuwuxinxiEntity>().eq("onshelves", 1));
-        for(FuwuxinxiEntity item : allServices) {
-            if(!currentItems.contains(item.getId()) && currentTypes.contains(item.getFuwuleixing())) {
-                candidateScore.put(item.getId(), candidateScore.getOrDefault(item.getId(), 0D) + 0.2D);
+        // 工具类推荐权重 1.0
+        for (int i = 0; i < recommendedItemIds.size(); i++) {
+            try {
+                Long id = Long.parseLong(recommendedItemIds.get(i));
+                scoreMap.put(id, 1.0 + (recommendedItemIds.size() - i) * 0.01);
+            } catch (Exception e) {}
+        }
+
+        // 同类型加分 0.2（保留原有逻辑）
+        Set<String> userLikeTypes = new HashSet<>();
+        for (Long refId : userCollected) {
+            userLikeTypes.add(itemTypeMap.get(refId));
+        }
+        for (FuwuxinxiEntity item : allServices) {
+            if (!userCollected.contains(item.getId()) && userLikeTypes.contains(item.getFuwuleixing())) {
+                scoreMap.put(item.getId(), scoreMap.getOrDefault(item.getId(), 0D) + 0.2);
             }
         }
 
+        // ===================== 6. 排序（推荐分 > 热度） =====================
         List<FuwuxinxiEntity> result = allServices.stream()
-                .filter(item -> !currentItems.contains(item.getId()))
+                .filter(item -> !userCollected.contains(item.getId()))
                 .sorted((a, b) -> {
-                    double scoreA = candidateScore.getOrDefault(a.getId(), 0D);
-                    double scoreB = candidateScore.getOrDefault(b.getId(), 0D);
-                    int scoreCompare = Double.compare(scoreB, scoreA);
-                    if(scoreCompare!=0) {
-                        return scoreCompare;
+                    double sA = scoreMap.getOrDefault(a.getId(), 0D);
+                    double sB = scoreMap.getOrDefault(b.getId(), 0D);
+                    int compare = Double.compare(sB, sA);
+                    if (compare != 0) {
+                        return compare;
                     }
-                    int hotA = (a.getStoreupnum()==null?0:a.getStoreupnum()) + (a.getThumbsupnum()==null?0:a.getThumbsupnum());
-                    int hotB = (b.getStoreupnum()==null?0:b.getStoreupnum()) + (b.getThumbsupnum()==null?0:b.getThumbsupnum());
+
+                    int hotA = (a.getStoreupnum() == null ? 0 : a.getStoreupnum()) + (a.getThumbsupnum() == null ? 0 : a.getThumbsupnum());
+                    int hotB = (b.getStoreupnum() == null ? 0 : b.getStoreupnum()) + (b.getThumbsupnum() == null ? 0 : b.getThumbsupnum());
                     return Integer.compare(hotB, hotA);
                 }).collect(Collectors.toList());
 
-        if(result.isEmpty()) {
+        if (result.isEmpty()) {
             result = allServices;
         }
+
+        // ===================== 7. 分页 =====================
         int fromIndex = Math.max((pageNum - 1) * limit, 0);
         int toIndex = Math.min(fromIndex + limit, result.size());
-        List<FuwuxinxiEntity> pageList = fromIndex>=result.size()?new ArrayList<FuwuxinxiEntity>():result.subList(fromIndex, toIndex);
+        List<FuwuxinxiEntity> pageList = fromIndex >= result.size() ? new ArrayList<>() : result.subList(fromIndex, toIndex);
+
         return R.ok().put("data", new PageUtils(pageList, result.size(), limit, pageNum));
     }
-
-
 
 
     /**

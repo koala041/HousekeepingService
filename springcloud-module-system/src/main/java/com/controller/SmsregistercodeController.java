@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * 短信验证码
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:59
  */
@@ -46,13 +46,6 @@ import java.io.IOException;
 public class SmsregistercodeController {
     @Autowired
     private SmsregistercodeService smsregistercodeService;
-
-
-
-
-    
-
-
 
     /**
      * 后台列表

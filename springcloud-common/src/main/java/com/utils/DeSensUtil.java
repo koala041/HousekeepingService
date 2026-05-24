@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 脱敏工具类
+ * 脱敏工具类：敏感信息脱敏，比如我们输入13252970104，进行这个 132****0104；
+ * 身份证号脱敏，比如我们输入440881199001010000，进行这个 440**********0000
+ * @author GG Bond
  */
 public class DeSensUtil {
 

@@ -15,7 +15,7 @@ import com.entity.view.NewsView;
 /**
  * 通知公告
  * 
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */

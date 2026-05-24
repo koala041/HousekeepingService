@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * 系统配置
  *
- * @author abo
+ * @author GG Bond
  */
 public class ApplicationConfig {
     /**

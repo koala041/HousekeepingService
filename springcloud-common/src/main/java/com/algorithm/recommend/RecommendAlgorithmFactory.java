@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * - ItemUserMatrixRecommender：基于物品-用户矩阵的协同过滤推荐器（物协）。
  * - ModelLoader：用于加载训练好的模型并进行混合推荐。
  * - AlgorithmTrainBuilder：用于训练新的推荐模型。
+ * @author GG Bond
  */
 @Component
 public class RecommendAlgorithmFactory {
@@ -133,13 +134,17 @@ public class RecommendAlgorithmFactory {
                 double similarity = entry.getValue();
 
                 Map<Long, Double> similarUserItems = matrix.get(similarUserId);
-                if (similarUserItems == null) continue;
+                if (similarUserItems == null) {
+                    continue;
+                }
 
                 for (Map.Entry<Long, Double> itemEntry : similarUserItems.entrySet()) {
                     Long itemId = itemEntry.getKey();
                     double itemRating = itemEntry.getValue();
 
-                    if (interactedItems.contains(itemId)) continue;
+                    if (interactedItems.contains(itemId)) {
+                        continue;
+                    }
 
                     double score = itemRating * similarity;
                     itemScores.put(itemId,
@@ -176,11 +181,15 @@ public class RecommendAlgorithmFactory {
                 double similarity = entry.getValue();
 
                 Map<Long, Double> similarUserItems = matrix.get(similarUserId);
-                if (similarUserItems == null) continue;
+                if (similarUserItems == null) {
+                    continue;
+                }
 
                 for (Map.Entry<Long, Double> itemEntry : similarUserItems.entrySet()) {
                     Long itemId = itemEntry.getKey();
-                    if (interactedItems.contains(itemId)) continue;
+                    if (interactedItems.contains(itemId)) {
+                        continue;
+                    }
 
                     double score = itemEntry.getValue() * similarity;
                     itemScores.put(itemId,
@@ -195,11 +204,15 @@ public class RecommendAlgorithmFactory {
             Map<Long, Double> similarities = new HashMap<>();
             Map<Long, Double> userVector = matrix.get(userId);
 
-            if (userVector == null) return similarities;
+            if (userVector == null) {
+                return similarities;
+            }
 
             for (Map.Entry<Long, Map<Long, Double>> entry : matrix.entrySet()) {
                 Long otherUserId = entry.getKey();
-                if (otherUserId.equals(userId)) continue;
+                if (otherUserId.equals(userId)) {
+                    continue;
+                }
 
                 double similarity = cosineSimilarity(userVector, entry.getValue());
                 if (similarity > 0) {
@@ -232,7 +245,9 @@ public class RecommendAlgorithmFactory {
                 norm2 += v * v;
             }
 
-            if (norm1 == 0 || norm2 == 0) return 0.0;
+            if (norm1 == 0 || norm2 == 0) {
+                return 0.0;
+            }
 
             return dotProduct / (Math.sqrt(norm1) * Math.sqrt(norm2));
         }
@@ -381,7 +396,9 @@ public class RecommendAlgorithmFactory {
 
             for (Long interactedItemId : userInteractedItems) {
                 Map<Long, Double> similarItems = itemSimilarities.get(interactedItemId);
-                if (similarItems == null) continue;
+                if (similarItems == null) {
+                    continue;
+                }
 
                 double userRating = getItemUserRating(interactedItemId, userId);
 
@@ -389,7 +406,9 @@ public class RecommendAlgorithmFactory {
                     Long candidateItemId = entry.getKey();
                     double similarity = entry.getValue();
 
-                    if (userInteractedItems.contains(candidateItemId)) continue;
+                    if (userInteractedItems.contains(candidateItemId)) {
+                        continue;
+                    }
 
                     double score = userRating * similarity;
                     itemScores.put(candidateItemId,
@@ -409,12 +428,16 @@ public class RecommendAlgorithmFactory {
             for (int i = 0; i < n; i++) {
                 Long item1 = itemIds.get(i);
                 Map<Long, Double> item1Users = matrix.get(item1);
-                if (item1Users == null || item1Users.isEmpty()) continue;
+                if (item1Users == null || item1Users.isEmpty()) {
+                    continue;
+                }
 
                 for (int j = i + 1; j < n; j++) {
                     Long item2 = itemIds.get(j);
                     Map<Long, Double> item2Users = matrix.get(item2);
-                    if (item2Users == null || item2Users.isEmpty()) continue;
+                    if (item2Users == null || item2Users.isEmpty()) {
+                        continue;
+                    }
 
                     double similarity = calculateItemCosineSimilarity(item1Users, item2Users);
 
@@ -452,7 +475,9 @@ public class RecommendAlgorithmFactory {
                 norm2 += v * v;
             }
 
-            if (norm1 == 0 || norm2 == 0) return 0.0;
+            if (norm1 == 0 || norm2 == 0) {
+                return 0.0;
+            }
 
             return dotProduct / (Math.sqrt(norm1) * Math.sqrt(norm2));
         }

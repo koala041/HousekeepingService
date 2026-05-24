@@ -6,6 +6,7 @@ import com.entity.ConfigEntity;
 
 /**
  * 配置
+ * @author GG Bond
  */
 public interface ConfigDao extends BaseMapper<ConfigEntity> {
 	

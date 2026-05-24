@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * 客户端工具类
  *
- * @author abo
+ * @author GG Bond
  */
 public class ServletUtils {
 

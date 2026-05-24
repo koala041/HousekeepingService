@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * 消息表
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
@@ -46,12 +46,6 @@ import java.io.IOException;
 public class ChatmessageController {
     @Autowired
     private ChatmessageService chatmessageService;
-
-
-
-
-    
-
 
 
     /**

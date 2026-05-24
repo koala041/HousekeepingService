@@ -15,23 +15,50 @@ import com.entity.view.ChatmessageView;
 /**
  * 消息表
  * 
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
 public interface ChatmessageDao extends BaseMapper<ChatmessageEntity> {
-	
+
+	/**
+	 * 查询所有记录
+	 * @return
+	 */
 	List<ChatmessageVO> selectListVO(@Param("ew") Wrapper<ChatmessageEntity> wrapper);
-	
+
+	/**
+	 * 根据实体作为筛选条件查询
+	 * @param wrapper
+	 * @return
+	 */
 	ChatmessageVO selectVO(@Param("ew") Wrapper<ChatmessageEntity> wrapper);
-	
+
+	/**
+	 * 查询所有记录
+	 * @return
+	 */
 	List<ChatmessageView> selectListView(@Param("ew") Wrapper<ChatmessageEntity> wrapper);
 
+	/**
+	 * 根据实体作为筛选条件查询
+	 * @param wrapper
+	 * @return
+	 */
 	List<ChatmessageView> selectListView(Pagination page,@Param("ew") Wrapper<ChatmessageEntity> wrapper);
 
+	/**
+	 * 获取查询总数
+	 * @param wrapper
+	 * @return
+	 */
     long selectListViewCount(@Param("ew") Wrapper<ChatmessageEntity> wrapper);
 
-	
+	/**
+	 * 获取实体
+	 * @param wrapper
+	 * @return
+	 */
 	ChatmessageView selectView(@Param("ew") Wrapper<ChatmessageEntity> wrapper);
 	
 

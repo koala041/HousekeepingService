@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * 查询参数
+ * @author GG Bond
  */
 public class Query<T> extends LinkedHashMap<String, Object> {
 	private static final long serialVersionUID = 1L;

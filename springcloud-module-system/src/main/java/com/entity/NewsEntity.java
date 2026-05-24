@@ -23,7 +23,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 /**
  * 通知公告
  * 数据库通用操作实体类（普通增删改查）
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */

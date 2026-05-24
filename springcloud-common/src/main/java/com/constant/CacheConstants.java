@@ -3,7 +3,7 @@ package com.constant;
 /**
  * 缓存的key 常量
  *
- * @author abo
+ * @author GG Bond
  */
 public class CacheConstants {
     /**

@@ -22,6 +22,9 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Properties;
 
+/**
+ * @author GG Bond
+ */
 public class EncryptUtil {
 
     private static final String DES_ALGORITHM = "DES";
@@ -57,7 +60,9 @@ public class EncryptUtil {
      * @return 密文
      */
     public static String md5(String text) {
-        if (text == null) return null;
+        if (text == null) {
+            return null;
+        }
         String md5str = DigestUtil.md5Hex(text);
         return md5str;
     }
@@ -69,7 +74,9 @@ public class EncryptUtil {
      * @return
      */
     public static String sha256(String text) {
-        if (text == null) return null;
+        if (text == null) {
+            return null;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -91,7 +98,9 @@ public class EncryptUtil {
      * @return 密文（64位十六进制字符串）
      */
     public static String sm3(String text) {
-        if (text == null) return null;
+        if (text == null) {
+            return null;
+        }
         String sm3str = SmUtil.sm3(text);
         return sm3str;
     }

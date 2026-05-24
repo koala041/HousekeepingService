@@ -37,8 +37,7 @@ import java.io.IOException;
 /**
  * 取消预约
  * 后端接口
- * @author 
- * @email 
+ * @author GG Bond
  * @date 2026-04-28 09:32:57
  */
 @RestController
@@ -46,13 +45,6 @@ import java.io.IOException;
 public class QuxiaoyuyueController {
     @Autowired
     private QuxiaoyuyueService quxiaoyuyueService;
-
-
-
-
-    
-
-
 
     /**
      * 后台列表

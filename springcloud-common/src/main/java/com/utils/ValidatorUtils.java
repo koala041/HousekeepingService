@@ -12,6 +12,7 @@ import com.entity.EIException;
 
 /**
  * hibernate-validator校验工具类
+ * @author GG Bond
  */
 public class ValidatorUtils {
     private static Validator validator;

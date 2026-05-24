@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 放行白名单配置
  *
- * @author abo
+ * @author GG Bond
  */
 @Configuration
 @RefreshScope

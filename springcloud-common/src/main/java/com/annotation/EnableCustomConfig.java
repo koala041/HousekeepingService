@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 import com.config.ApplicationConfig;
 
+/**
+ * @author GG Bond
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

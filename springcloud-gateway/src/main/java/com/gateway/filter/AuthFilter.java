@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 /**
  * 网关鉴权
  *
- * @author abo
+ * @author GG Bond
  */
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {

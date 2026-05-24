@@ -23,6 +23,7 @@ import com.aliyun.sdk.service.dypnsapi20170525.models.SendSmsVerifyCodeResponse;
 import darabonba.core.client.ClientOverrideConfiguration;
 import java.util.concurrent.CompletableFuture;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @Component
 public class CommonUtil {
@@ -177,15 +178,15 @@ public class CommonUtil {
     }
 
 
-    public static boolean sendSMS(String phone,String key){
-        // 请使用自己的accessKeyId和accessKeySecret，建议在config表中修改。
+    public static String sendSMS(String phone, String key){
+        // 请使用自己的accessKeyId和accessKeySecret
         String accessKeyId = ConfigUtil.getConfigValue("aliyun", "accessKeyId");
-        System.out.println(accessKeyId);
         String accessKeySecret = ConfigUtil.getConfigValue("aliyun", "accessKeySecret");
-        System.out.println(accessKeySecret);
+        System.out.println("accessKeyId: " + accessKeyId);
+        System.out.println("accessKeySecret: " + accessKeySecret);
         if(StringUtils.isBlank(accessKeyId) || StringUtils.isBlank(accessKeySecret)) {
             System.out.println("短信未真实发送：未配置阿里云accessKeyId/accessKeySecret，本地验证码为 " + key);
-            return false;
+            return key;
         }
         AsyncClient client = null;
         try {
@@ -197,16 +198,28 @@ public class CommonUtil {
             //模板Code,如果是使用阿里云的测试模板
             String templateCode = "100001";
             String templateParam = "{\"code\":\"" + key + "\",\"min\":\"5\"}";
-            SendSmsVerifyCodeRequest sendSmsVerifyCodeRequest = SendSmsVerifyCodeRequest.builder().signName(signName).templateCode(templateCode).phoneNumber(phone).returnVerifyCode(true).templateParam(templateParam).build();
+            // returnVerifyCode(true): 阿里云生成验证码并返回，用其返回值覆盖数据库中的验证码
+            SendSmsVerifyCodeRequest sendSmsVerifyCodeRequest = SendSmsVerifyCodeRequest.builder().signName(signName).templateCode(templateCode).
+                    phoneNumber(phone).returnVerifyCode(true).templateParam(templateParam).build();
 
             CompletableFuture<SendSmsVerifyCodeResponse> response = client.sendSmsVerifyCode(sendSmsVerifyCodeRequest);
 
             SendSmsVerifyCodeResponse resp = response.get();
-            System.out.println(new Gson().toJson(resp.getBody()));
-            return true;
+            String responseJson = new Gson().toJson(resp.getBody());
+            System.out.println("阿里云短信响应: " + responseJson);
+            // 从阿里云响应中提取实际发送的验证码
+            JsonObject jsonObj = new Gson().fromJson(responseJson, JsonObject.class);
+            // 检查阿里云业务状态码：只有 "OK" 才表示发送成功
+            String bizCode = jsonObj.has("code") ? jsonObj.get("code").getAsString() : "";
+            if (!"OK".equals(bizCode)) {
+                System.err.println("阿里云短信发送业务失败: " + responseJson);
+                return null;
+            }
+            String aliyunCode = jsonObj.has("verifyCode") ? jsonObj.get("verifyCode").getAsString() : null;
+            return aliyunCode != null ? aliyunCode : key;
         } catch (Exception e) {
             System.err.println("短信发送失败：" + e.getMessage());
-            return false;
+            return null;
         } finally {
             if (client != null) {
                 client.close();

@@ -23,7 +23,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 /**
  * 服务人员
  * 数据库通用操作实体类（普通增删改查）
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:57
  */
@@ -79,6 +79,11 @@ public class FuwurenyuanEntity<T> implements Serializable {
 	 * 服务状态
 	 */
 	private String fuwuzhuangtai;
+
+	/**
+	 * 联系电话
+	 */
+	private String lianxidianhua;
 	
 	/**
 	 * 收益
