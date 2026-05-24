@@ -11,6 +11,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+/**
+ * @author GG Bond
+ */
 public class AipPicTrans extends BaseClient {
     public AipPicTrans(String appId, String apiKey, String secretKey) {
         super(appId, apiKey, secretKey);

@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 
 /**
  * Mybatis-Plus 工具类
+ * @author GG Bond
  */
 public class MPUtil {
     public static final char UNDERLINE = '_';

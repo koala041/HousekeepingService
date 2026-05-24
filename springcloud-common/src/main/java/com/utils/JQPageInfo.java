@@ -1,5 +1,8 @@
 package com.utils;
 
+/**
+ * @author GG Bond
+ */
 public class JQPageInfo{
 	private Integer page;
 	

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 /**
  * 类说明 :
+ * @author GG Bond
  */
 @Slf4j
 public class FileUtil {
@@ -129,7 +130,9 @@ public class FileUtil {
 	 * 检查是否为图片文件
 	 */
 	public static boolean isImageFile(String fileName) {
-		if (fileName == null) return false;
+		if (fileName == null) {
+			return false;
+		}
 		String ext = getFileExtension(fileName);
 		return ext.equals("jpg") || ext.equals("jpeg") || ext.equals("png");
 	}
@@ -138,7 +141,9 @@ public class FileUtil {
 	 * 检查是否为视频文件
 	 */
 	public static boolean isVideoFile(String fileName) {
-		if (fileName == null) return false;
+		if (fileName == null) {
+			return false;
+		}
 		String ext = getFileExtension(fileName);
 		return ext.equals("mp4") || ext.equals("avi") || ext.equals("mov");
 	}

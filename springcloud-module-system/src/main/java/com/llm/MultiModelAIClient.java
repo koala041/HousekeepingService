@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
  * - 流式传输支持：提供SSE(Server-Sent Events)方式的流式响应处理
  * - 字符编码检测：智能检测文本文件的字符编码格式
  * - 统一错误处理：标准化异常处理和错误信息返回
+ * @author GG Bond
  */
 @Slf4j
 public final class MultiModelAIClient {
@@ -797,7 +798,9 @@ public final class MultiModelAIClient {
                         if (data.contains("}{")) {
                             String[] jsonParts = data.split("(?<=})");
                             for (String part : jsonParts) {
-                                if (part.trim().isEmpty()) continue;
+                                if (part.trim().isEmpty()) {
+                                    continue;
+                                }
                                 JsonNode jsonNode = OBJECT_MAPPER.readTree(part);
                                 String content = adapter.parseStreamResponse(jsonNode);
                                 if (content != null && !content.isEmpty()) {
@@ -960,7 +963,9 @@ public final class MultiModelAIClient {
         if (data.contains("}{")) {
             String[] jsonParts = data.split("(?<=})");
             for (String part : jsonParts) {
-                if (part.trim().isEmpty()) continue;
+                if (part.trim().isEmpty()) {
+                    continue;
+                }
                 JsonNode jsonNode = OBJECT_MAPPER.readTree(part);
                 String content = adapter.parseStreamResponse(jsonNode);
                 if (content != null && !content.isEmpty()) {

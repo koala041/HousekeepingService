@@ -14,7 +14,7 @@ import feign.RequestTemplate;
 /**
  * feign 请求拦截器
  *
- * @author abo
+ * @author GG Bond
  */
 @Component
 public class FeignRequestInterceptor implements RequestInterceptor {

@@ -108,8 +108,9 @@ public class FuwurenyuanController {
         if(Integer.valueOf(smsCheck.get("code").toString())!=0) {
             return smsCheck;
         }
-		Long uId = new Date().getTime();
+		Long uId = System.currentTimeMillis();
 		fuwurenyuan.setId(uId);
+        fuwurenyuan.setLianxidianhua(fuwurenyuan.getMobile());
         //保存用户
         fuwurenyuanService.insert(fuwurenyuan);
         return R.ok();
@@ -122,16 +123,25 @@ public class FuwurenyuanController {
     @IgnoreAuth
     @RequestMapping("/sendsms")
     public R sendsms(@RequestParam String mobile){
-        String code = CommonUtil.getRandomNumber(6);
+        String localCode = CommonUtil.getRandomNumber(6);
+        // 调用阿里云发送短信，获取阿里云实际发送的验证码
+        String actualCode = CommonUtil.sendSMS(mobile, localCode);
+        System.out.println("=========服务人员注册发送验证码===================");
+        System.out.println("localCode:" + localCode);
+        System.out.println("actualCode:" + actualCode);
+        if(actualCode == null) {
+            return R.error("短信发送失败，请稍后重试");
+        }
         SmsregistercodeEntity smsregistercode = new SmsregistercodeEntity();
-        smsregistercode.setCode(code);
+        smsregistercode.setCode(actualCode);
         smsregistercode.setRole("服务人员");
         smsregistercode.setMobile(mobile);
         smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        boolean sent = CommonUtil.sendSMS(mobile, code);
-        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
-                .put("data", code).put("mock", !sent);
+        boolean isMock = StringUtils.isBlank(actualCode);
+        System.out.println("isMock:" + isMock);
+        return R.ok(isMock ? "短信未真实发送，本地调试验证码：" + actualCode : "发送成功")
+                .put("data", actualCode).put("mock", isMock);
     }
 
     /**
@@ -144,16 +154,25 @@ public class FuwurenyuanController {
         if(u==null) {
             return R.error("用户不存在");
         }
-        String code = CommonUtil.getRandomNumber(6);
+        String localCode = CommonUtil.getRandomNumber(6);
+        // 调用阿里云发送短信，获取阿里云实际发送的验证码
+        String actualCode = CommonUtil.sendSMS(mobile, localCode);
+        System.out.println("=========服务人员手机号登录发送验证码===================");
+        System.out.println("localCode:" + localCode);
+        System.out.println("actualCode:" + actualCode);
+        if(actualCode == null) {
+            return R.error("短信发送失败，请稍后重试");
+        }
         SmsregistercodeEntity smsregistercode = new SmsregistercodeEntity();
-        smsregistercode.setCode(code);
+        smsregistercode.setCode(actualCode);
         smsregistercode.setRole("服务人员");
         smsregistercode.setMobile(mobile);
         smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        boolean sent = CommonUtil.sendSMS(mobile, code);
-        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
-                .put("data", code).put("mock", !sent);
+        boolean isMock = StringUtils.isBlank(actualCode);
+        System.out.println("isMock:" + isMock);
+        return R.ok(isMock ? "短信未真实发送，本地调试验证码：" + actualCode : "发送成功")
+                .put("data", actualCode).put("mock", isMock);
     }
 
     /**

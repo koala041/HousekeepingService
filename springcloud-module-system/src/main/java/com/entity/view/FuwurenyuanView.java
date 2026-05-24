@@ -15,8 +15,8 @@ import com.utils.EncryptUtil;
  * 服务人员
  * 后端返回视图实体辅助类   
  * （通常后端关联的表或者自定义的字段需要返回使用）
- * @author 
- * @email 
+ * @author GG Bond
+ * @email
  * @date 2026-04-28 09:32:57
  */
 @TableName("fuwurenyuan")

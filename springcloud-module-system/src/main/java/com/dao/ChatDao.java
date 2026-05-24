@@ -15,23 +15,52 @@ import com.entity.view.ChatView;
 /**
  * 在线客服
  * 
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
 public interface ChatDao extends BaseMapper<ChatEntity> {
-	
+
+	/**
+	 * 查询所有记录
+	 * @param wrapper
+	 * @return
+	 */
 	List<ChatVO> selectListVO(@Param("ew") Wrapper<ChatEntity> wrapper);
-	
+
+	/**
+	 * 根据实体查询
+	 * @param wrapper
+	 * @return
+	 */
 	ChatVO selectVO(@Param("ew") Wrapper<ChatEntity> wrapper);
-	
+
+	/**
+	 * 查询所有记录
+	 * @param wrapper
+	 * @return
+	 */
 	List<ChatView> selectListView(@Param("ew") Wrapper<ChatEntity> wrapper);
 
+	/**
+	 * 根据实体查询
+	 * @param wrapper
+	 * @return
+	 */
 	List<ChatView> selectListView(Pagination page,@Param("ew") Wrapper<ChatEntity> wrapper);
 
+	/**
+	 * 查询所有记录
+	 * @param wrapper
+	 * @return
+	 */
     long selectListViewCount(@Param("ew") Wrapper<ChatEntity> wrapper);
 
-	
+	/**
+	 * 获取实体
+	 * @param wrapper
+	 * @return
+	 */
 	ChatView selectView(@Param("ew") Wrapper<ChatEntity> wrapper);
 	
 

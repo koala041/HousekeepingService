@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 /**
  * 消息表
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */

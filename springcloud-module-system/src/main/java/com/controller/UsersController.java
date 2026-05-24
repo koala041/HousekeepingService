@@ -38,21 +38,18 @@ import com.utils.CommonUtil;
 import java.io.IOException;
 /**
  * 管理员
- * 后端接口
- * @author 
+ * 后端接口  /springcloud-alibaba/users/login
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:59
  */
 @RestController
 @RequestMapping("/users")
 public class UsersController {
+    private static int printCount = 0;
     @Autowired
     private UsersService usersService;
 
-
-
-
-    
 	@Autowired
 	private TokenService tokenService;
 
@@ -62,8 +59,9 @@ public class UsersController {
 	@IgnoreAuth
 	@RequestMapping(value = "/login")
 	public R login(String username, String password, String captcha, HttpServletRequest request) {
-        System.out.println("管理员信息：" + username);
-        System.out.println("管理员信息：" + password);
+        System.out.println("管理员信息==>用户：" + username + " 密码：" + password);
+        printCount++ ;
+        System.out.println("打印次数：" + printCount);
         // 根据登录查询用户信息
         UsersEntity u = usersService.selectOne(new EntityWrapper<UsersEntity>().eq("username", username));
         if(u==null || !u.getPassword().equals(password)) {

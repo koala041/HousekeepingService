@@ -23,6 +23,7 @@ import com.utils.IPUtils;
 
 /**
  * 系统日志，切面处理类
+ * @author GG Bond
  */
 @Aspect
 @Component

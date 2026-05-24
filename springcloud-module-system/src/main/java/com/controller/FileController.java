@@ -29,6 +29,7 @@ import java.util.Random;
 
 /**
  * 上传文件映射表
+ * @author GG Bond
  */
 @RestController
 @RequestMapping("file")

@@ -42,7 +42,7 @@ import com.utils.RedisUtils;
 /**
  * 用户
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:56
  */
@@ -111,7 +111,9 @@ public class YonghuController {
         }
         //判断验证码是否正确，否则返回错误信息
         R smsCheck = checkSmsCode("用户", yonghu.getMobile(), smscode);
-        if(Integer.valueOf(smsCheck.get("code").toString())!=0) return smsCheck;
+        if(Integer.valueOf(smsCheck.get("code").toString())!=0) {
+            return smsCheck;
+        }
 		Long uId = new Date().getTime();
 		yonghu.setId(uId);
         //保存用户
@@ -126,16 +128,24 @@ public class YonghuController {
     @IgnoreAuth
     @RequestMapping("/sendsms")
     public R sendsms(@RequestParam String mobile){
-        String code = CommonUtil.getRandomNumber(6);
+        String localCode = CommonUtil.getRandomNumber(6);
+        System.out.println("localCode:" + localCode);
+        // 调用阿里云发送短信，获取阿里云实际发送的验证码
+        String actualCode = CommonUtil.sendSMS(mobile, localCode);
+        System.out.println("actualCode:" + actualCode);
+        if(actualCode == null) {
+            return R.error("短信发送失败，请稍后重试");
+        }
         SmsregistercodeEntity smsregistercode = new SmsregistercodeEntity();
-        smsregistercode.setCode(code);
+        smsregistercode.setCode(actualCode);
         smsregistercode.setRole("用户");
         smsregistercode.setMobile(mobile);
         smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        boolean sent = CommonUtil.sendSMS(mobile, code);
-        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
-                .put("data", code).put("mock", !sent);
+        boolean isMock = StringUtils.isBlank(actualCode);
+        System.out.println("isMock:" + isMock);
+        return R.ok(isMock ? "短信未真实发送，本地调试验证码：" + actualCode : "发送成功")
+                .put("data", actualCode).put("mock", isMock);
     }
 
     /**
@@ -148,16 +158,24 @@ public class YonghuController {
         if(u==null) {
             return R.error("用户不存在");
         }
-        String code = CommonUtil.getRandomNumber(6);
+        String localCode = CommonUtil.getRandomNumber(6);
+        // 调用阿里云发送短信，获取阿里云实际发送的验证码
+        String actualCode = CommonUtil.sendSMS(mobile, localCode);
+        System.out.println("localCode:" + localCode);
+        System.out.println("actualCode:" + actualCode);
+        if(actualCode == null) {
+            return R.error("短信发送失败，请稍后重试");
+        }
         SmsregistercodeEntity smsregistercode = new SmsregistercodeEntity();
-        smsregistercode.setCode(code);
+        smsregistercode.setCode(actualCode);
         smsregistercode.setRole("用户");
         smsregistercode.setMobile(mobile);
         smsregistercode.setAddtime(new Date());
         smsregistercodeService.insert(smsregistercode);
-        boolean sent = CommonUtil.sendSMS(mobile, code);
-        return R.ok(sent ? "发送成功" : "短信未真实发送，请检查阿里云短信配置；本地调试可使用返回的验证码")
-                .put("data", code).put("mock", !sent);
+        boolean isMock = StringUtils.isBlank(actualCode);
+        System.out.println("isMock:" + isMock);
+        return R.ok(isMock ? "短信未真实发送，本地调试验证码：" + actualCode : "发送成功")
+                .put("data", actualCode).put("mock", isMock);
     }
 
     /**
@@ -167,9 +185,13 @@ public class YonghuController {
     @RequestMapping("/sms/login")
     public R emailLogin(@RequestParam String mobile,@RequestParam(required = false) String smscode){
         YonghuEntity u =yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("mobile", mobile));
-        if(u==null) return R.error("用户不存在");
+        if(u==null) {
+            return R.error("用户不存在");
+        }
         R smsCheck = checkSmsCode("用户", mobile, smscode);
-        if(Integer.valueOf(smsCheck.get("code").toString())!=0) return smsCheck;
+        if(Integer.valueOf(smsCheck.get("code").toString())!=0) {
+            return smsCheck;
+        }
         // 判断用户锁定状态
         if(u!=null && u.getStatus().intValue()==1) {
             //返回已锁定提示
@@ -184,14 +206,22 @@ public class YonghuController {
     }
 
     private R checkSmsCode(String role, String mobile, String smscode) {
-        if(StringUtils.isBlank(smscode)) return R.error("请输入短信验证码");
+        if(StringUtils.isBlank(smscode)) {
+            return R.error("请输入短信验证码");
+        }
         List<SmsregistercodeEntity> smsregistercodeList = smsregistercodeService.selectList(new EntityWrapper<SmsregistercodeEntity>()
                 .eq("role", role).eq("mobile", mobile).orderBy("addtime", false));
-        if(smsregistercodeList==null || smsregistercodeList.size()==0) return R.error("请先获取短信验证码");
+        if(smsregistercodeList==null || smsregistercodeList.size()==0) {
+            return R.error("请先获取短信验证码");
+        }
         SmsregistercodeEntity latest = smsregistercodeList.get(0);
         Date addtime = latest.getAddtime();
-        if(addtime==null || new Date().getTime() - addtime.getTime() > SMS_EXPIRE_MILLIS) return R.error("短信验证码已失效，请重新获取");
-        if(!latest.getCode().equals(smscode)) return R.error("短信验证码不正确");
+        if(addtime==null || System.currentTimeMillis() - addtime.getTime() > SMS_EXPIRE_MILLIS) {
+            return R.error("短信验证码已失效，请重新获取");
+        }
+        if(!latest.getCode().equals(smscode)) {
+            return R.error("短信验证码不正确");
+        }
         return R.ok();
     }
 	/**
@@ -256,7 +286,6 @@ public class YonghuController {
 		HttpServletRequest request){
         //设置查询条件
         EntityWrapper<YonghuEntity> ew = new EntityWrapper<YonghuEntity>();
-
 
         //查询结果
 		PageUtils page = yonghuService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, yonghu), params), params));

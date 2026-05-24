@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 网关统一异常处理
  *
- * @author abo
+ * @author GG Bond
  */
 @Order(-1)
 @Configuration

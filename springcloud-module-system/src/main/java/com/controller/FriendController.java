@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * 好友表
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
@@ -46,12 +46,6 @@ import java.io.IOException;
 public class FriendController {
     @Autowired
     private FriendService friendService;
-
-
-
-
-    
-
 
      /**
      * 后台列表

@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/** 百度地图
+ * @author GG Bond
+ */
 public class AipTranslate extends BaseClient {
     public AipTranslate(String appId, String apiKey, String secretKey) {
         super(appId, apiKey, secretKey);

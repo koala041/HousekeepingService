@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 路由配置信息
  *
- * @author abo
+ * @author GG Bond
  */
 @Configuration
 public class RouterFunctionConfiguration {

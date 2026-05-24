@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * 在线客服
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
@@ -46,13 +46,6 @@ import java.io.IOException;
 public class ChatController {
     @Autowired
     private ChatService chatService;
-
-
-
-
-    
-
-
 
     /**
      * 后台列表
@@ -98,12 +91,24 @@ public class ChatController {
     	}
         //设置查询条件
         EntityWrapper<ChatEntity> ew = new EntityWrapper<ChatEntity>();
-        if(isreplystart!=null) ew.ge("isreply", isreplystart);
-        if(isreplyend!=null) ew.le("isreply", isreplyend);
-        if(isreadstart!=null) ew.ge("isread", isreadstart);
-        if(isreadend!=null) ew.le("isread", isreadend);
-        if(typestart!=null) ew.ge("type", typestart);
-        if(typeend!=null) ew.le("type", typeend);
+        if(isreplystart!=null) {
+            ew.ge("isreply", isreplystart);
+        }
+        if(isreplyend!=null) {
+            ew.le("isreply", isreplyend);
+        }
+        if(isreadstart!=null) {
+            ew.ge("isread", isreadstart);
+        }
+        if(isreadend!=null) {
+            ew.le("isread", isreadend);
+        }
+        if(typestart!=null) {
+            ew.ge("type", typestart);
+        }
+        if(typeend!=null) {
+            ew.le("type", typeend);
+        }
 
         //查询结果
 		PageUtils page = chatService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, chat), params), params));
@@ -159,9 +164,6 @@ public class ChatController {
         DeSensUtil.desensitize(chat,deSens);
         return R.ok().put("data", chat);
     }
-    
-
-
 
     /**
      * 后台保存
@@ -204,8 +206,6 @@ public class ChatController {
         return R.ok().put("data",chat.getId());
     }
 
-
-
      /**
      * 获取用户密保
      */
@@ -229,10 +229,6 @@ public class ChatController {
         chatService.updateById(chat);
         return R.ok();
     }
-
-
-
-    
 
     /**
      * 删除
@@ -272,10 +268,5 @@ public class ChatController {
 		PageUtils page = chatService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, chat), params), params));
         return R.ok().put("data", page);
     }
-
-
-
-
-
 
 }

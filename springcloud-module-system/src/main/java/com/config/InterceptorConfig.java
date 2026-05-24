@@ -11,6 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import com.interceptor.AuthorizationInterceptor;
 
+/**
+ * 配置 拦截器（登录 / 权限校验） 和 静态资源映射（图片 / 文件 / 前端页面访问），是项目里权限控制 + 文件访问的关键。
+ * @author GG Bond
+ */
 @Configuration
 public class InterceptorConfig extends WebMvcConfigurationSupport{
 

@@ -37,7 +37,7 @@ import java.io.IOException;
 /**
  * 通知公告
  * 后端接口
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
@@ -46,13 +46,6 @@ import java.io.IOException;
 public class NewsController {
     @Autowired
     private NewsService newsService;
-
-
-
-
-    
-
-
 
     /**
      * 后台列表

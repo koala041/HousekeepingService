@@ -6,10 +6,17 @@ import java.util.Map;
 
 /**
  * 通用接口
+ * @author GG Bond
  */
 public interface CommonDao{
+
+	/**
+	 * 获取下拉框数据
+	 * @param params
+	 * @return
+	 */
 	List<String> getOption(Map<String, Object> params);
-	
+
 	Map<String, Object> getFollowByOption(Map<String, Object> params);
 	
 	List<String> getFollowByOption2(Map<String, Object> params);

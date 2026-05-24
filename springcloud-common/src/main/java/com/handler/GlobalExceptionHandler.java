@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * 全局异常处理器 - 统一返回格式化错误信息
  *
- * @author abo
+ * @author GG Bond
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

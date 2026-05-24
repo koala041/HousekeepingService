@@ -15,24 +15,44 @@ import com.entity.view.FriendView;
 /**
  * 好友表
  * 
- * @author 
+ * @author GG Bond
  * @email 
  * @date 2026-04-28 09:32:58
  */
 public interface FriendDao extends BaseMapper<FriendEntity> {
-	
+	/**
+	 * 查询列表
+	 */
 	List<FriendVO> selectListVO(@Param("ew") Wrapper<FriendEntity> wrapper);
-	
+
+	/**
+	 * 查询单个
+	 */
 	FriendVO selectVO(@Param("ew") Wrapper<FriendEntity> wrapper);
-	
+
+	/**
+	 * 查询列表
+	 */
 	List<FriendView> selectListView(@Param("ew") Wrapper<FriendEntity> wrapper);
 
+	/**
+	 * 查询列表
+	 */
 	List<FriendView> selectListView(Pagination page,@Param("ew") Wrapper<FriendEntity> wrapper);
 
+	/**
+	 * 查询单个
+	 */
     long selectListViewCount(@Param("ew") Wrapper<FriendEntity> wrapper);
 
+	/**
+	 * 列表
+	 */
     List<FriendView> selectFriendListView(Pagination page, Map<String, Object> params);
-	
+
+	/**
+	 * 详情
+	 */
 	FriendView selectView(@Param("ew") Wrapper<FriendEntity> wrapper);
 	
 

@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 /** 
  * token表
+ * @author GG Bond
  */
 @TableName("token")
 public class TokenEntity implements Serializable {

@@ -23,6 +23,7 @@ import com.utils.R;
 
 /**
  * 登录相关
+ * @author GG Bond
  */
 @RequestMapping("config")
 @RestController

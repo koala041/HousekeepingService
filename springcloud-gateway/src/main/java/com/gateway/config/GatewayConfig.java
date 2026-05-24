@@ -15,7 +15,7 @@ import java.util.Collections;
 /**
  * 网关限流配置
  *
- * @author abo
+ * @author GG Bond
  */
 @Configuration
 public class GatewayConfig {

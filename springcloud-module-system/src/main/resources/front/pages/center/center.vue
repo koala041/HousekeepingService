@@ -442,7 +442,7 @@
 			async getRecommendList(){
 				let params = {
 					page: 1,
-					limit: 4,
+					limit: 5,
 				}
 				let res;
 				if(uni.getStorageSync("appUserid")) {

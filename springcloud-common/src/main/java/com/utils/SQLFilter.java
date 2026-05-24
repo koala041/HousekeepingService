@@ -7,6 +7,7 @@ import com.entity.EIException;
 
 /**
  * SQL过滤
+ * @author GG Bond
  */
 public class SQLFilter {
 
