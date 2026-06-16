@@ -2,26 +2,70 @@
 server:
   port: 9999
 
-# Spring
-spring: 
+# Spring 主配置（已合并、去重、修复错误）
+spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    # 应用名称
-    name: springcloud-alibaba
+    name: springcloud-alibaba  # 服务名（Nacos 必须）
   profiles:
-    # 环境配置
     active: dev
+
+  # 数据库配置（唯一一份，正确）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springcloud_alibaba?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 20040104
+
+  # Nacos 服务注册与配置
   cloud:
     nacos:
       discovery:
-        # 服务注册地址
         server-addr: 127.0.0.1:8848
       config:
-        # 配置中心地址
         server-addr: 127.0.0.1:8848
-        # 配置文件格式
         file-extension: yml
-        # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+  # 文件上传
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # 静态资源
+  resources:
+    static-locations: classpath:static/,file:static/
+
+  # Redis
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    timeout: 6000ms
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 5
+
+# MyBatis-Plus
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  typeAliasesPackage: com.entity
+  global-config:
+    id-type: 1
+    field-strategy: 1
+    db-column-underline: true
+    refresh-mapper: true
+    logic-delete-value: -1
+    logic-not-delete-value: 0
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'

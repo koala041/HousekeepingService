@@ -15,7 +15,7 @@ import uniPopup from "./components/uni-popup/uni-popup.vue"
 import MescrollUni from "./components/mescroll-uni/mescroll-uni.vue";
 // 上拉,下拉组件
 import uniLoadMore from "./components/uni-load-more/uni-load-more.vue"
-import {VueJsonp} from './components/vue-jsonp'
+import {VueJsonp} from 'vue-jsonp'
 //轮播
 import zSwiperItem from "./components/zebra-swiper/components/z-swiper-item/z-swiper-item.vue";
 import zSwiper from "./components/zebra-swiper/components/z-swiper/z-swiper.vue";
